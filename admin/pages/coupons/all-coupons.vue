@@ -93,11 +93,11 @@
                                             item.d_fvalue }}</strong>
                                         </td>
                                         <td class="text-center">
-                                            <span v-if="(item.status == 1)" class="text-success"> Active </span>
-                                            <span v-else class="text-danger"> Inactive </span>
+                                            <span v-if="(item.status == 1)" class="badge bg-success-light"> Active </span>
+                                            <span v-else class="badge bg-danger-light"> Inactive </span>
                                         </td>
                                         <td>
-                                            <nuxt-link :to="`/coupons/edit/${item.id}`" variant="warning" size="sm"><i
+                                            <nuxt-link :to="`/coupons/edit/${item.id}`" class="btn btn-warning bg-history-light"  variant="warning" size="sm"><i
                                                     class="bx bx-edit"></i>EDIT
                                             </nuxt-link>
                                         </td>

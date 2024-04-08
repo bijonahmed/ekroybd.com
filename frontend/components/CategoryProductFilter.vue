@@ -194,7 +194,8 @@
 
                                         </div>
                                         <div class="col pad_ding">
-                                            <!-- <strong>Official store </strong> -->
+                                            <strong v-if="item.seller_name">{{item.seller_name}}</strong>                                   
+                                            <strong v-else >Admin Seller</strong>
                                             <h5>{{ item.product_name }}</h5>
                                             <div class="d-flex align-items-center">
                                                 <div class="ratings m-0">
@@ -212,19 +213,18 @@
                                             </div>
                                         </div>
                                         <div class="col pad_ding">
-                                            <div class=""  v-if="item.discount_status == 1">
-                                                
-                                                <h4  v-if="item.discount !== 0">${{ item.percentPrice }}</h4>
-                                                <h4 v-else class="me-1">${{ item.price }}</h4>
-                                                <h4 class="disabled" v-if="item.discount !==0"><strike>${{ item.price }}</strike><span>{{ item.discount }}%</span></h4>
+                                            <div class=""  v-if="item.discount_status == 1">                                                
+                                                <h4  class="me-1">${{ (item.last_price).toFixed(2) }}</h4>
+                                                <h4 class="disabled" v-if="item.discount !==0 && item.discount !== ''"><strike>${{ item.price }}</strike><span>{{ item.discount }}%</span></h4>
                                             </div>
+
+
                                             <div class=""  v-else-if="item.discount_status == 2">
-                                                <h4  v-if="item.discount !== 0">${{ item.dis_price }}</h4>
-                                                <h4 v-else class="me-1">${{ item.price }}</h4>
-                                                <h4 class="disabled" v-if="item.discount !==0"><strike>${{ item.price }}</strike><span>${{ item.discount }}</span></h4>
+                                                <h4  class="me-1">${{ (item.last_price).toFixed(2) }}</h4>
+                                                <h4 class="disabled" v-if="item.discount !==0 && item.discount !== ''"><strike>${{ item.price }}</strike><span>${{ item.discount }}</span></h4>
                                             </div>
                                             <div class=""  v-else>
-                                                <h4 class="me-1">${{ item.price }}</h4>
+                                                <h4 class="me-1">${{ (item.last_price).toFixed(2) }}</h4>
                                             </div>
 
 
@@ -326,6 +326,21 @@ export default {
                     product: productToAdd,
                     quantity: 1
                 });
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Product successfully Added to cart"
+                });
             }
 
             this.saveCart();
@@ -350,21 +365,22 @@ export default {
         },
 
         calculateSubtotal() {
-            let subtotal = 0;
-            this.cart.forEach((item) => {
-                const product = item.product;
-                console.log(`Quantity: ${item.quantity}, Price: ${product.price}`);
-                const priceAsNumber = parseFloat(product.price.replace(/[^\d.]/g, '')); //510;//product.price;
-                if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
-                    subtotal += item.quantity * priceAsNumber;
-                } else {
-                    console.error('Invalid quantity or price:', item.quantity, product.price);
-                }
-                // console.log(`Intermediate Subtotal: ${subtotal}`);
-            });
-            //console.log(`Final Subtotal: ${subtotal}`);
-            return this.subtotal = subtotal;
+            // let subtotal = 0;
+            // this.cart.forEach((item) => {
+            //     const product = item.product;
+            //     console.log(`Quantity: ${item.quantity}, Price: ${product.price}`);
+            //     const priceAsNumber = parseFloat(product.price.replace(/[^\d.]/g, '')); //510;//product.price;
+            //     if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
+            //         subtotal += item.quantity * priceAsNumber;
+            //     } else {
+            //         console.error('Invalid quantity or price:', item.quantity, product.price);
+            //     }
+            //     // console.log(`Intermediate Subtotal: ${subtotal}`);
+            // });
+            // //console.log(`Final Subtotal: ${subtotal}`);
+            // return this.subtotal = subtotal;
             //return subtotal;
+            return 0;
         },
         categoryGrid() {
             const slug = this.$route.query.slug;

@@ -99,6 +99,7 @@ export default {
                 } else {
                     console.warn('Unsupported role_id:', data.role_id);
                 }
+                this.closePopup();
                 Swal.fire({
                     position: "top-end",
                     icon: "success",

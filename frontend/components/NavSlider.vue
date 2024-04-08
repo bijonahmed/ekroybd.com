@@ -26,14 +26,12 @@
                                     <div class="row" v-if="category.children && category.children.length > 0">
                                         <div class="col-4" v-for="childCategory in category.children"
                                             :key="childCategory.id">
-                                            <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{
-                        childCategory.name }}</a></h6>
+                                            <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{ childCategory.name }}</a></h6>
 
                                             <ul v-if="childCategory.children && childCategory.children.length > 0">
                                                 <li v-for="inSubCategory in childCategory.children"
                                                     :key="inSubCategory.id"><a href="#"
-                                                        @click="redirectCategory(inSubCategory.slug)">{{
-                        inSubCategory.name }}</a></li>
+                                                        @click="redirectCategory(inSubCategory.slug)">{{ inSubCategory.name }}</a></li>
 
                                             </ul>
                                         </div>
@@ -47,7 +45,7 @@
                         <ul>
                             <li>
                                 <Nuxt-link to="/category/all-categorys" class="d-flex justify-content-between">
-                                    <div><img src="images/cat_svg/more-100.png" alt="">Other Categories</div>
+                                    <div><img src="images/cat_svg/more-100.png" alt="">All Categories</div>
                                     <div><i class="fa-solid fa-angle-right"></i></div>
                                 </Nuxt-link>
                             </li>

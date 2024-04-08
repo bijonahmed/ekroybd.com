@@ -47,6 +47,8 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|unique:users,email',
             'password' => 'required|min:2|confirmed', // Add the 'confirmed' rule
+        ],[
+            'password' => "Password dosen't match",
         ]);
 
         $ipaddress = request()->ip();

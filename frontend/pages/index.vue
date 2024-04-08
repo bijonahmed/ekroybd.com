@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id="_top">
 
     <body class="bgBackground mainContent">
         <TopBannarDesktopView />
@@ -55,7 +55,8 @@ export default {
                 autoplayTimeout: 3000
                 // Add more options as needed
             });
-        }
+        },
+        
     }
 }
 </script>
@@ -66,7 +67,7 @@ export default {
 }
 
 .mainContent {
-    background-image: url('/images/ECOMMERCE-cover-you-bg.jpeg');
+    /* background-image: url('/images/ECOMMERCE-cover-you-bg.jpeg'); */
     background-size: contain;
     background-position: top center;
     background-repeat: no-repeat;

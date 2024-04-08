@@ -1,4 +1,7 @@
 {
+  "AddNewCard": {
+    "description": "Auto imported from components/addNewCard.vue"
+  },
   "BestPrice": {
     "description": "Auto imported from components/BestPrice.vue"
   },
@@ -34,6 +37,9 @@
   },
   "CategorySliders": {
     "description": "Auto imported from components/CategorySliders.vue"
+  },
+  "CategorySlidersTest": {
+    "description": "Auto imported from components/CategorySlidersTest.vue"
   },
   "CategoryThree": {
     "description": "Auto imported from components/CategoryThree.vue"
@@ -71,6 +77,9 @@
   "LimitedStokDetails": {
     "description": "Auto imported from components/LimitedStokDetails.vue"
   },
+  "LoginCartpage": {
+    "description": "Auto imported from components/loginCartpage.vue"
+  },
   "LoginPopup": {
     "description": "Auto imported from components/LoginPopup.vue"
   },
@@ -82,6 +91,9 @@
   },
   "Navbar": {
     "description": "Auto imported from components/Navbar.vue"
+  },
+  "NavbarSecond": {
+    "description": "Auto imported from components/navbarSecond.vue"
   },
   "NavSlider": {
     "description": "Auto imported from components/NavSlider.vue"
@@ -130,6 +142,9 @@
   },
   "TopSellingItemBackup": {
     "description": "Auto imported from components/TopSellingItemBackup.vue"
+  },
+  "TopSellingItemCopy": {
+    "description": "Auto imported from components/TopSellingItem_copy.vue"
   },
   "Tutorial": {
     "description": "Auto imported from components/Tutorial.vue"

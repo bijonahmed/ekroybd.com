@@ -2,21 +2,23 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Auth;
-use Validator;
-use Helper;
-use App\Models\User;
-use App\Models\SellerAds;
-use App\Models\Profile;
-use Illuminate\Support\Str;
-use App\Rules\MatchOldPassword;
-use Illuminate\Support\Facades\Hash;
 use DB;
+use Auth;
 use File;
-use PhpParser\Node\Stmt\TryCatch;
+use Helper;
+use Validator;
+use App\Models\User;
+use App\Models\Profile;
+use App\Models\SellerAds;
+use Illuminate\Support\Str;
 use function Ramsey\Uuid\v1;
+use Illuminate\Http\Request;
+use App\Rules\MatchOldPassword;
+use PhpParser\Node\Stmt\TryCatch;
+use App\Http\Controllers\Controller;
+use App\Models\PaymentCard;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -706,7 +708,7 @@ class UserController extends Controller
         $bannerAds_4    = SellerAds::where('seller_id', $id)->where('position', 'banner_4')->first();
         $bannerAds_5    = SellerAds::where('seller_id', $id)->where('position', 'banner_5')->first();
         $youtube_ads    = SellerAds::where('seller_id', $id)->where('position', 'youtube_videos')->first();
-       // dd($youtube_ads->file_name);
+        // dd($youtube_ads->file_name);
         $data['top_banner_img']       = !empty($topBanner) ? url($topBanner->file_name) : "";
         $data['banner1']              = !empty($bannerAds_1) ? url($bannerAds_1->file_name) : "";
         $data['banner2']              = !empty($bannerAds_2) ? url($bannerAds_2->file_name) : "";
@@ -720,7 +722,8 @@ class UserController extends Controller
 
 
 
-    public function updateYAds(Request $request){
+    public function updateYAds(Request $request)
+    {
 
         $id = auth('api')->user()->id;
 
@@ -753,8 +756,6 @@ class UserController extends Controller
             'message' => 'Successfully upload',
         ];
         return response()->json($response);
-
-
     }
     public function updatebannerFive(Request $request)
     {
@@ -1405,5 +1406,65 @@ class UserController extends Controller
         $user->save();
         $response = "Password successfully changed!";
         return response()->json($response);
+    }
+    public function saveCard(request $request)
+    {
+        // dd($request);
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'card_number' => 'required|numeric',
+            'holder_name' => 'required',
+            'expiry_date' => ['required', 'date_format:m/y'],
+        ], [
+            'expiry_date' => 'The expiry date must MM/YY formate',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $paymentCard = PaymentCard::create([
+            'user_id' => $request->user_id,
+            'card_number' => $request->card_number,
+            'card_holder' => $request->holder_name,
+            'expiry_date' => $request->expiry_date,
+        ]);
+
+        if ($paymentCard) {
+            return response()->json([
+                'status' => 200,
+                'message' => "Success"
+            ]);
+        } else {
+            return response()->json([
+                'status' => 200,
+                'error' => "Invalid to add data"
+            ]);
+        }
+    }
+    public function getCard(Request $request, int $id)
+    {
+
+        // dd($id);
+        // Retrieve the payment card from the database based on the provided ID
+        $paymentCards = PaymentCard::where('user_id', $id)->get();
+
+        $cardDetails = [];
+
+        foreach ($paymentCards as $paymentCard) {
+            $cardDetails[] = [
+                'id' => $paymentCard->id,
+                'holder_name' => $paymentCard->card_holder,
+                'card_number' => substr($paymentCard->card_number, -2),
+                'expiry_date' => $paymentCard->expiry_date,
+            ];
+        }
+
+
+        if ($paymentCard) {
+            return response()->json(['paymentCard' => $cardDetails], 200);
+        } else {
+            return response()->json(['error' => 'Payment card not found'], 404);
+        }
     }
 }

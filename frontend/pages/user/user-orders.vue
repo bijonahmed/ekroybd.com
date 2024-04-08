@@ -2,61 +2,14 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <section class="search_bar">
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-3 col-md-4 col-4">
-                        <div class="logo nav_tab">
-                            <!-- mobile view sidebar  -->
-                            <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
-                                    class="fa-solid fa-bars-staggered"></i></button>
-                            <!-- sidebar offcanvas  -->
-                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-                                aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <!-- offf canvas start here  -->
-                                    <Common_MobileSidebar />
-                                </div>
-                            </div>
-                            <!-- mini tab view navbar here  -->
-                            <Common_MiniTabNavbar />
-                            <!-- nav end  -->
-                            <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
-                        </div>
-                    </div>
-                    <div class="col-6 desktop_view mini_tab_hide">
-                        <form action="" class="">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" name="" id="" placeholder="Search Product" class="form-control"> <button
-                                type="button">Search</button>
-                        </form>
-                    </div>
-                    <!-- desktop_view options  -->
-                    <DesktopViewOption />
-                    <!-- mobile view options  -->
-                    <div class="col-4 ms-auto  mobile_view">
-                        <div class="mobile_nav_option">
-                            <a class="search_form"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </div>
-                    </div>
-                    <!-- search modal  -->
-                    <Common_MobileSearchProduct />
-                </div>
-            </div>
-        </section>
+        <navbarSecond />
         <!-- Main section start here  -->
 
         <section class="main_content ">
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
-                        <userSidebar/>
+                        <userSidebar />
                     </div>
                     <div class="col-md-9 ps-md-0">
                         <div class="loading-indicator" v-if="loading">
@@ -66,27 +19,69 @@
                             </div>
                         </div>
                         <div class="main_profile">
-
+                            
                             <div class="recent_orders">
                                 <h4>Orders </h4>
+                                <!-- {{ orders }} -->
                                 <table class="table">
                                     <thead>
                                         <tr>
                                             <th>Order ID</th>
-                                            <th>Place On </th>
-                                            <th>Total </th>
-                                            <th>Status </th>
+                                            <th class="text-center">Place On </th>
+                                            <th class="text-center">Item </th>
+                                            <th class="text-center">Quantity </th>
+                                            <th class="text-center">Total </th>
+                                            <th class="text-center">Status </th>
                                             <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr v-for="order in orders" :key="order.id">
+                                            <!-- {{ order.name }} -->
                                             <td>{{ order.orderId }}</td>
-                                            <td>{{ order.placeOn }}</td>
-                                            <td>{{ order.total }}</td>
-                                            <td>{{ order.name }}</td>
-                                            <td><button class="btn btn_edit_nxt" @click="orderDetails(order.orderId)"><i
-                                                        class="fas fa-search-plus"></i></button></td>
+                                            <td class="text-center">{{ order.placeOn }}</td>
+                                            <td class="order_item text-center">
+                                                <nuxt-link :to="`../product-details/${order.pro_slug}`">
+                                                    <img :src="order.pro_img" class="img-fluid"
+                                                        :alt="order.pro_name">
+                                                </nuxt-link>
+                                            </td>
+                                            <td class="text-center">{{ order.qty }}</td>
+                                            <td class="text-center">{{ order.total }}</td>
+                                            <td class="text-center">
+                                                <p v-if="order.name == 'Cancelled or Returned'"
+                                                    class="badge bg-danger-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+                                                <p v-else-if="order.name == 'Payment Processing'"
+                                                    class="badge bg-success-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+                                                <p v-else-if="order.name == 'Order Confirmed'"
+                                                    class="badge bg-success-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+                                                <p v-else-if="order.name == 'Item Shipped'"
+                                                    class="badge bg-success-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+                                                <p v-else-if="order.name == 'In Transit'" class="badge bg-success-light"
+                                                    style="font-size: 10px;"> {{ order.name }}</p>
+                                                <p v-else-if="order.name == 'Out for Delivery'"
+                                                    class="badge bg-danger-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+
+                                                <p v-else-if="order.name == 'Delivered'" class="badge bg-success-light"
+                                                    style="font-size: 10px;"> {{ order.name }}</p>
+                                                <p v-else-if="order.name == 'Order Completed'"
+                                                    class="badge bg-success-light" style="font-size: 10px;"> {{
+                            order.name }}</p>
+                                                <p v-else-if="order.name == 'Order Placed'"
+                                                    class="badge bg-success-light" style="font-size: 10px;"> {{
+                                                    order.name }}</p>
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-warning bg-history-light w-100 "
+                                                    style="padding: 1px !important;"
+                                                    @click="trackOrder(order.orderId)"><i
+                                                        class="fa-regular fa-eye"></i></button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -135,11 +130,13 @@ import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import userSidebar from '~/components/userSidebar.vue';
+import navbarSecond from '../../components/navbarSecond.vue';
 
 export default {
 
-    middleware: 'auth',
+    middleware: 'IsUser',
     components: {
+        navbarSecond,
         Common_MobileSidebar,
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,
@@ -178,10 +175,10 @@ export default {
             })
         },
 
-        orderDetails(orderId) {
+        trackOrder(orderId) {
 
             this.$router.push({
-                path: '/user/order-details',
+                path: '/user/track-order',
                 query: {
                     orderId: orderId
                 }
@@ -245,4 +242,5 @@ export default {
 
 .loader-bottom {
     bottom: 0;
-}</style>
+}
+</style>

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -109,6 +110,8 @@ Route::group([
     Route::post('updatebannerFive', [UserController::class, 'updatebannerFive']);
     Route::post('updateYAds', [UserController::class, 'updateYAds']);
     Route::post('getSellerAds', [UserController::class, 'getSellerAds']);
+    Route::post('saveCard', [UserController::class, 'saveCard']);
+    Route::get('cardlist/{id}', [UserController::class, 'getCard']);
 });
 Route::group([
     'middleware' => 'api',
@@ -134,7 +137,7 @@ Route::group([
     Route::get('attributes', [CategoryController::class, 'getAttribute']);
     Route::get('attributes-list', [CategoryController::class, 'getAttributeList']);
     Route::get('attributes-val-list', [CategoryController::class, 'getAttributeValList']);    
-    Route::post('speacialCatSave', [CategoryController::class, 'speacialCatSave']);
+    Route::post('speacialCatSave', [CategoryController::class, 'speacialCatSave']); 
 });
 
 Route::group([
@@ -162,6 +165,9 @@ Route::group([
     Route::post('deleteVarient', [ProductController::class, 'deleteVarient']);
     Route::get('varient-list/{id}', [ProductController::class, 'varientList']);
     Route::get('checkAttribue', [ProductController::class, 'checkAttribue']);
+    Route::post('addWarranty', [ProductController::class, 'addWarranty']);
+    Route::get('addWarranty/{product_id}', [ProductController::class, 'getaddWarranty']);
+    Route::get('deletewarranty/{id}', [ProductController::class, 'deletewarranty']);
 });
 
 Route::group([
@@ -221,6 +227,8 @@ Route::group([
     Route::post('save_order', [OrderController::class, 'save_order']);
     Route::get('allOrdersAdmin', [OrderController::class, 'allOrdersAdmin']);
     Route::post('update_order_status', [OrderController::class, 'update_order_status']);
+    Route::post('orderTrack', [OrderController::class, 'orderTrackadd']);
+    Route::get('orderTrackList/{orderid}', [OrderController::class, 'orderTrackaddList']);
 });
 
 Route::group([
@@ -256,6 +264,7 @@ Route::group([
 
     Route::get('readcoupons', [UnauthenticatedController::class, 'featchcoupon']);
     Route::get('readcoupons/{code}', [UnauthenticatedController::class, 'getCoupon']);
+    Route::post('couponDiscount', [UnauthenticatedController::class, 'getcouponDiscount']);
     Route::get('alldealsads', [UnauthenticatedController::class, 'getdealsbannersads']);
     Route::get('headerbanner', [UnauthenticatedController::class, 'getbanner']);  
     
@@ -263,9 +272,9 @@ Route::group([
     Route::get('brandproductList/{slug}', [UnauthenticatedController::class, 'getbrandproductList']);
     Route::get('speacialCategory', [UnauthenticatedController::class, 'getSpeacialCatList']);
     Route::get('checkAttribueDetails', [UnauthenticatedController::class, 'checkAttribueDetails']);
-
-
+    Route::get('products/search', [UnauthenticatedController::class, 'search']);
 });
+
 
 
 Route::group([
@@ -323,9 +332,15 @@ Route::group([
     Route::get('getcoupons/{id}', [SettingController::class, 'getcoupons']);
 
     // seller status 
-    
     Route::get('editseller/{id}', [SettingController::class, 'editseller']);
     Route::post('updateSeller', [SettingController::class, 'updateSeller']);
+    // sliders     
+    Route::post('addslidersImages', [SettingController::class, 'saveslidersImages']);
+    Route::post('deleteSlider', [SettingController::class, 'deleteSliderimage']);
+
+    Route::post('companyProfile', [SettingController::class, 'updateCompanyProfile']);
+    Route::get('getCompanyData', [SettingController::class, 'getProfileData']);
+    Route::get('getcoupons', [SettingController::class, 'getcoupos']);
 
     
 });

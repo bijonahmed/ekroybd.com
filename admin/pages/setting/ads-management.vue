@@ -3,6 +3,49 @@
         <!--start page wrapper -->
         <div class="page-wrapper">
             <div class="page-content">
+                <!-- top slider part start here  -->
+                <div class="row">
+                    <div class="col-md-8 m-auto">
+
+                        <div class="form-group mb-2">
+                            <label for="" class="text-dark fs-6">Home page To sliders</label>
+                            <span class="text-gray d-block mb-2">For better experience user .gif file</span>
+                            <div class="row px-2">
+                                <div class="col-md-2 col-sm-3 col-4 px-1" v-for="(item, index) in sliders"
+                                    :key="item.id">
+                                    <div class="slider_img_box">
+                                        <img :src="item.images" alt="" class="img-fluid">
+                                        <button @click="removeSlider(item.id)"
+                                            class="btn btn-danger w-100 mt-1 py-1">Remove</button>
+                                        <!-- <nuxt-link :to="`/remove/${item.id}`" class="btn btn-danger w-100 mt-1 py-1">Remove</nuxt-link> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form_container bg-white p-3">
+                            <form @submit.prevent="saveSliders" id="formrest" class="forms-sample"
+                                enctype="multipart/form-data">
+                                <div class="form-group mb-2">
+                                    <input type="file" class="form-control" @change="sliderFileUpload" name="image">
+                                    <p class="text-gray">Size: 600x400</p>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <label for="status" class="text-dark fs-6">Status</label>
+                                    <select v-model="sliderdata.status" id="status" class="form-control">
+                                        <option value="0">Draft</option>
+                                        <option value="1" selected>Published</option>
+                                    </select>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <button type="submit" class="btn-success w-100 py-1 border-0">
+                                        <i class="bx bx-check-circle mr-1"></i>Submit
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- top slider part end here  -->
 
                 <!--top header banner row-->
                 <div class="row">
@@ -125,6 +168,12 @@ export default {
     },
     data() {
         return {
+            sliderdata: {
+                image: '',
+                status: '1',
+
+            },
+            sliders: [],
             bannerImage: '',
             dealsImageOne: null,
             dealsImageTwo: null,
@@ -147,11 +196,51 @@ export default {
     },
     mounted() {
         this.fetchBannerData();
+        this.slidersImg();
     },
     methods: {
+        removeSlider(id) {
+            this.$axios.post('/setting/deleteSlider', { id: id })
+                .then(response => {
+                    this.slidersImg();
+                    console.log(response.data);
+                    Lobibox.notify('success', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-check-circle',
+                        msg: 'Your slider image successfully Remove.'
+                    });
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        },
+        sliderFileUpload(event) {
+            this.sliderdata.image = event.target.files[0];
+        },
+        saveSliders() {
+            const formData = new FormData();
+            formData.append('image', this.sliderdata.image);
+            formData.append('status', this.sliderdata.status);
+            this.$axios.post('/setting/addslidersImages', formData)
+                .then(response => {
+                    this.slidersImg();
+                    Lobibox.notify('success', {
+                        pauseDelayOnHover: true,
+                        continueDelayOnInactiveTab: false,
+                        position: 'top right',
+                        icon: 'bx bx-check-circle',
+                        msg: 'Your data has been successfully updated.'
+                    });
+                });
 
-        // image handaler 
-
+        },
+        async slidersImg() {
+            console.log("slider images...");
+            const response = await this.$axios.get(`/unauthenticate/slidersImages`);
+            this.sliders = response.data;
+        },
         handleFileChange(event) {
             const file = event.target.files[0]; // Get the selected file
             if (file) {
@@ -269,13 +358,10 @@ export default {
             const formData = new FormData();
             formData.append('image', this.insertdata.image);
             formData.append('status', this.insertdata.status);
-            // console.log(formData);
 
-            // Make a POST request to your API endpoint
             this.$axios.post('/setting/bannerTop', formData)
                 .then(response => {
-                    // Handle successful response
-                    // console.log('Data saved successfully:', response.data.images);
+
                     this.previewURL = response.data.images;
                     Lobibox.notify('success', {
                         pauseDelayOnHover: true,
@@ -284,14 +370,10 @@ export default {
                         icon: 'bx bx-check-circle',
                         msg: 'Your data has been successfully updated.'
                     });
-                    // Optionally, you can redirect the user or perform any other action
                 })
                 .catch(error => {
-                    // Handle error
                     console.error('Error saving data:', error);
-                    // Check if error.response exists
                     if (error.response) {
-                        // If error.response.data exists, it contains error message from server
                         if (error.response.data && error.response.data.errors.image) {
                             Lobibox.notify('error', {
                                 pauseDelayOnHover: true,
@@ -438,6 +520,14 @@ export default {
 </script>
 
 <style>
+.slider_img_box {
+    margin-bottom: 10px;
+}
+
+.slider_img_box img {
+    width: 100%;
+}
+
 input,
 select,
 textarea {

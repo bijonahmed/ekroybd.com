@@ -1,5 +1,5 @@
 <template>
-<div>
+<!-- <div> -->
     <footer>
         <!-- mobile footer  -->
         <div class="mobile_view">
@@ -155,7 +155,7 @@
                                 <Nuxt-link to="/seller-form">Seller Register </Nuxt-link>
                             </li>
                             <li>
-                                <Nuxt-link to="#">Offical Store</Nuxt-link>
+                                <Nuxt-link to="/allshop">All Stores</Nuxt-link>
                             </li>
                             <!-- <li>
                                 <Nuxt-link to="/customer-review">Customer Review</Nuxt-link>
@@ -210,12 +210,12 @@
                             <li>
                                 <Nuxt-link to="/seller/seller-account-setting">Account Settings</Nuxt-link>
                             </li>
-                            <!-- <li>
+                            <li>
                                 <Nuxt-link to="/seller/seller-wallet">Wallet</Nuxt-link>
                             </li>
                             <li>
                                 <Nuxt-link to="/seller/seller-message">Seller Massage</Nuxt-link>
-                            </li> -->
+                            </li>
                         </ul>
                     </div>
                     <div class="col-md-3 col-6">
@@ -301,5 +301,5 @@
         </div>
         <!-- footer others web links  -->
     </footer>
-</div>
+<!-- </div> -->
 </template>

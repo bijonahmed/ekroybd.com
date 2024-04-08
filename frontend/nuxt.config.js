@@ -32,6 +32,7 @@ export default {
       { rel: "stylesheet", href: "/css/owl.carousel.min.css" },
       { rel: "stylesheet", href: "/css/owl.theme.default.min.css" },
       { rel: "stylesheet", href: "/css/customslider.css" },
+      { rel: 'stylesheet', href: 'https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css' },
     ],
     script: [
       { src: "https://code.jquery.com/jquery-3.7.0.js" },
@@ -56,6 +57,9 @@ export default {
       { src: "/js/addActiveClass.js" },
       { src: "/js/owl.carousel.min.js" },
       { src: "/js/owl_carousel_plugin.js" },
+      {
+        src: "https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js",
+      },
     ],
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -68,6 +72,7 @@ export default {
     "~/plugins/event-bus.js",
     { src: "~plugins/jquery.js", ssr: false }, // Import jQuery
     { src: "~plugins/vue-owl-carousel.js", ssr: false },
+    { src: '~/plugins/scroll-top.js', mode: 'client' },
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -101,8 +106,9 @@ export default {
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: "http://127.0.0.1:8000/api",
+    // baseURL: "http://127.0.0.1:8000/api",
     // baseURL: "https://api.ekroybd.com/api/",
+    baseURL: process.env.NODE_ENV === 'production' ? 'https://api.ekroybd.com/api/' : 'http://127.0.0.1:8000/api/',
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
@@ -119,4 +125,10 @@ export default {
       },
     },
   },
+  router: {
+    scrollBehavior(to, from, savedPosition) {
+      return { x: 0, y: 0 };
+    }
+  }
+
 };

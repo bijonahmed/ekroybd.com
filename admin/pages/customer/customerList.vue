@@ -75,12 +75,12 @@
                                     <td>{{ item.address_2 }}</td>
                                     <td>{{ item.address_3 }}</td>
                                     <td class="text-center">
-                                        <span v-if="(item.status == 1)"> Active </span>
+                                        <span class="badge bg-success-light" v-if="(item.status == 1)"> Active </span>
                                         <span v-else> Inactive </span>
                                     </td>
                                     <td>
                                         <center>
-                                            <nuxt-link :to="{name: 'customer-edit-id', params: {id: item.id}}" variant="warning" size="sm"><i class="bx bx-edit"></i>EDIT
+                                            <nuxt-link :to="{name: 'customer-edit-id', params: {id: item.id}}"  class="btn btn-warning bg-history-light" variant="warning" size="sm"><i class="bx bx-edit"></i>EDIT
                                             </nuxt-link>
                                              <!-- <span  @click="editCustomer(item.id)"><i class="bx bx-edit"></i>Edit</span> -->
                                             

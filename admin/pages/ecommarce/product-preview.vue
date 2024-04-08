@@ -267,14 +267,14 @@
 
                                     </div>
                                     <div class="col-md-4">
-                                        Show<br/>
-                                        ID: {{ varientData.id }}<br/>
-                                        color: {{ varientData.color }}<br/>
-                                        Size: {{ varientData.size }}<br/>
-                                        sku: {{ varientData.sku }}<br/>
-                                        qty: {{ varientData.qty }}<br/>
-                                        price: {{ varientData.price }}<br/>
-                                        price: {{ varientData.image }}<br/>
+                                        Show<br />
+                                        ID: {{ varientData.id }}<br />
+                                        color: {{ varientData.color }}<br />
+                                        Size: {{ varientData.size }}<br />
+                                        sku: {{ varientData.sku }}<br />
+                                        qty: {{ varientData.qty }}<br />
+                                        price: {{ varientData.price }}<br />
+                                        price: {{ varientData.image }}<br />
 
                                     </div>
 
@@ -306,6 +306,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            <!-- {{ historVarient }} -->
                                             <tr v-for="(data, index) in historVarient" :key="data.id">
                                                 <th scope="row">{{ index + 1 }}.</th>
                                                 <td>{{ data.color }}</td>
@@ -316,8 +317,10 @@
                                                 <td><img :src="data.image" alt="N/A" style="height: 50px; width: 60px;"
                                                         class="img-fluid max-width-100 img-thumbnail" />
                                                 </td>
-                                                <td><button type="button">EDIT</button><button
-                                                        type="button">DEL</button></td>
+                                                <td>
+                                                    <nuxt-link :to='`/ecommarce/product-varient?parameter=${data.product_id}`' type="button" class="btn btn-warning" >EDIT</nuxt-link>
+                                                    <!-- <button @click="deleteAttributeValue(key)" type="button">DEL</button> -->
+                                                </td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -332,7 +335,6 @@
             </div>
         </div>
         <!--end row-->
-    </div>
     </div>
 </template>
 

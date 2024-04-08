@@ -283,6 +283,7 @@ class CategoryController extends Controller
     {
         try {
             $categories = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->get();
+            // $categoriesList = Categorys::with('children.children.children.children.children')->where('parent_id', 0)->where('speacial_status', 1)->get();
             $count = Categorys::where('speacial_status', 1)->count();
 
             $products = [];
@@ -300,6 +301,7 @@ class CategoryController extends Controller
             return response()->json([
                 'data'  => $products,
                 'count' => $count,
+                // 'catList' => $categoriesList,
 
             ]);
 
@@ -479,9 +481,6 @@ class CategoryController extends Controller
         $id = $request->category_id;
         $category = Categorys::find($id);
 
-        
-
-
         if ($request->hasFile("image")) {
 
             $validator =  Validator::make(
@@ -493,8 +492,6 @@ class CategoryController extends Controller
             if ($validator->fails()) {
                 return response()->json(['errors' => $validator->errors()], 422);
             }
-
-
             $image = $request->image;
             $imageName = "/upload/" . time() . "." . $image->getClientOriginalExtension();
             $image->move(public_path("upload"), $imageName);

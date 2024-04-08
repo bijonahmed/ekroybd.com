@@ -13,12 +13,13 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_plugin_8a72e2a4 from 'nuxt_plugin_plugin_8a72e2a4' // Source: .\\components\\plugin.js (mode: 'all')
-import nuxt_plugin_axios_7acc17d1 from 'nuxt_plugin_axios_7acc17d1' // Source: .\\axios.js (mode: 'all')
+import nuxt_plugin_plugin_759eee78 from 'nuxt_plugin_plugin_759eee78' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_axios_eca352ca from 'nuxt_plugin_axios_eca352ca' // Source: .\\axios.js (mode: 'all')
 import nuxt_plugin_eventbus_2faefc80 from 'nuxt_plugin_eventbus_2faefc80' // Source: ..\\plugins\\event-bus.js (mode: 'all')
 import nuxt_plugin_jquery_b59486bc from 'nuxt_plugin_jquery_b59486bc' // Source: ..\\plugins\\jquery.js (mode: 'client')
 import nuxt_plugin_vueowlcarousel_4da6f850 from 'nuxt_plugin_vueowlcarousel_4da6f850' // Source: ..\\plugins\\vue-owl-carousel.js (mode: 'client')
-import nuxt_plugin_auth_393cd33f from 'nuxt_plugin_auth_393cd33f' // Source: .\\auth.js (mode: 'all')
+import nuxt_plugin_scrolltop_88433868 from 'nuxt_plugin_scrolltop_88433868' // Source: ..\\plugins\\scroll-top.js (mode: 'client')
+import nuxt_plugin_auth_b5dad996 from 'nuxt_plugin_auth_b5dad996' // Source: .\\auth.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -86,7 +87,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"Welcome to Ecommarce","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":""},{"name":"format-detection","content":"telephone=no"}],"link":[{"rel":"icon","type":"image","href":"\u002Fecommerce_icon.png"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fbootstrap@5.3.0\u002Fdist\u002Fcss\u002Fbootstrap.min.css"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Ffont-awesome\u002F6.4.0\u002Fcss\u002Fall.min.css"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-bundle.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fstyles.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fstorebtn.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fowl.carousel.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fowl.theme.default.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fcustomslider.css"}],"script":[{"src":"https:\u002F\u002Fcode.jquery.com\u002Fjquery-3.7.0.js"},{"src":"https:\u002F\u002Fcdn.ckeditor.com\u002F4.17.1\u002Fstandard\u002Fckeditor.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fbootstrap@5.3.0\u002Fdist\u002Fjs\u002Fbootstrap.bundle.min.js"},{"src":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Fpopper.js\u002F1.14.3\u002Fumd\u002Fpopper.min.js"},{"src":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Fjqueryui\u002F1.12.1\u002Fjquery-ui.min.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fsweetalert2@11"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-bundle.min.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-element-bundle.min.js"},{"src":"\u002Fjs\u002Fstar-rating.js"},{"src":"\u002Fjs\u002Fsearch_modal.js"},{"src":"\u002Fjs\u002Flogin_popup.js"},{"src":"\u002Fjs\u002FaddActiveClass.js"},{"src":"\u002Fjs\u002Fowl.carousel.min.js"},{"src":"\u002Fjs\u002Fowl_carousel_plugin.js"}],"style":[]},
+    head: {"title":"Welcome to Ecommarce","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":""},{"name":"format-detection","content":"telephone=no"}],"link":[{"rel":"icon","type":"image","href":"\u002Fecommerce_icon.png"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fbootstrap@5.3.0\u002Fdist\u002Fcss\u002Fbootstrap.min.css"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Ffont-awesome\u002F6.4.0\u002Fcss\u002Fall.min.css"},{"rel":"stylesheet","href":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-bundle.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fstyles.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fstorebtn.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fowl.carousel.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fowl.theme.default.min.css"},{"rel":"stylesheet","href":"\u002Fcss\u002Fcustomslider.css"},{"rel":"stylesheet","href":"https:\u002F\u002Fcode.jquery.com\u002Fui\u002F1.12.1\u002Fthemes\u002Fbase\u002Fjquery-ui.css"}],"script":[{"src":"https:\u002F\u002Fcode.jquery.com\u002Fjquery-3.7.0.js"},{"src":"https:\u002F\u002Fcdn.ckeditor.com\u002F4.17.1\u002Fstandard\u002Fckeditor.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fbootstrap@5.3.0\u002Fdist\u002Fjs\u002Fbootstrap.bundle.min.js"},{"src":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Fpopper.js\u002F1.14.3\u002Fumd\u002Fpopper.min.js"},{"src":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Fjqueryui\u002F1.12.1\u002Fjquery-ui.min.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fsweetalert2@11"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-bundle.min.js"},{"src":"https:\u002F\u002Fcdn.jsdelivr.net\u002Fnpm\u002Fswiper@11\u002Fswiper-element-bundle.min.js"},{"src":"\u002Fjs\u002Fstar-rating.js"},{"src":"\u002Fjs\u002Fsearch_modal.js"},{"src":"\u002Fjs\u002Flogin_popup.js"},{"src":"\u002Fjs\u002FaddActiveClass.js"},{"src":"\u002Fjs\u002Fowl.carousel.min.js"},{"src":"\u002Fjs\u002Fowl_carousel_plugin.js"},{"src":"https:\u002F\u002Fcdnjs.cloudflare.com\u002Fajax\u002Flibs\u002Fjqueryui\u002F1.12.1\u002Fjquery-ui.min.js"}],"style":[]},
 
     store,
     router,
@@ -216,12 +217,12 @@ async function createApp(ssrContext, config = {}) {
   }
   // Plugin execution
 
-  if (typeof nuxt_plugin_plugin_8a72e2a4 === 'function') {
-    await nuxt_plugin_plugin_8a72e2a4(app.context, inject)
+  if (typeof nuxt_plugin_plugin_759eee78 === 'function') {
+    await nuxt_plugin_plugin_759eee78(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_axios_7acc17d1 === 'function') {
-    await nuxt_plugin_axios_7acc17d1(app.context, inject)
+  if (typeof nuxt_plugin_axios_eca352ca === 'function') {
+    await nuxt_plugin_axios_eca352ca(app.context, inject)
   }
 
   if (typeof nuxt_plugin_eventbus_2faefc80 === 'function') {
@@ -236,8 +237,12 @@ async function createApp(ssrContext, config = {}) {
     await nuxt_plugin_vueowlcarousel_4da6f850(app.context, inject)
   }
 
-  if (typeof nuxt_plugin_auth_393cd33f === 'function') {
-    await nuxt_plugin_auth_393cd33f(app.context, inject)
+  if (process.client && typeof nuxt_plugin_scrolltop_88433868 === 'function') {
+    await nuxt_plugin_scrolltop_88433868(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_auth_b5dad996 === 'function') {
+    await nuxt_plugin_auth_b5dad996(app.context, inject)
   }
 
   // Lock enablePreview in context

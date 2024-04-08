@@ -43,7 +43,7 @@ export default {
             try {
                 const response = await this.$axios.get(`/unauthenticate/alldealsads`);
                 this.banner = response.data;
-                console.log(response.data);
+                // console.log(response.data);
 
             } catch (error) {
                 // Handle error

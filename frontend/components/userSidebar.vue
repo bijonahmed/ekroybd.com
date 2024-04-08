@@ -59,7 +59,7 @@
                     <nuxt-link to="/user/my-reviews" exact-active-class="active">My Reviews</Nuxt-link>
                 </li>
                 <li class="">
-                    <a type="button" @click="logout">LogOut </a>
+                    <a type="button" @click="logout">Logout </a>
                 </li>
             </ul>
             <div class="post_mdal_ mdal_">

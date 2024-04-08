@@ -68,19 +68,19 @@
                 <!-- Load Login Components -->
                 <div>
                     <center><span class="show_error text-danger"></span></center>
-                    <form @submit.prevent="customerLogin()" id="formrest" class="forms-sample" enctype="multipart/form-data">
+                    <form @submit.prevent="customerLogin()" id="formrest" class="forms-sample d-block" enctype="multipart/form-data">
                         <div class="input_group">
                             <!-- <label for="">User Name </label> -->
                             <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
                             <input type="text" placeholder="Email" v-model="login.email">
                             <i class="fa-solid fa-user"></i>
                         </div>
-                        <div class="input_group">
+                        <div class="input_group mb-1">
                             <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
                             <input type="password" placeholder="Password" v-model="login.password">
-                            <i class="toggle-password fa-solid fa-eye"></i>
+                            <i class="toggle-password fa-solid fa-eye" ></i>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex justify-content-end align-items-center mb-2">
                             <div class="d-flex align-items-center d-none">
                                 <input type="checkbox" id="remeber"><label for="remeber">Remember me</label>
                             </div>
@@ -90,7 +90,7 @@
                             <button class="btn_logins" type="submit">Login</button>
                         </div>
                         <div class="d-flex">
-                            <p style="font-size: 12px !important;">Don't have Account? <nuxt-link to="/login" class="btn_signup " type="button">SignUp</nuxt-link>
+                            <p style="font-size: 12px !important;" class="text-center w-100 mt-2">Don't have Account? <nuxt-link to="/login" class="btn_signup " type="button">SignUp</nuxt-link>
                             </p>
                         </div>
                     </form>
@@ -225,9 +225,31 @@ export default {
         },
 
         async logout() {
-            await this.$auth.logout()
+            await this.$auth.logout()           
+            
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                },
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Successfully Logout!",
+            });
         }
 
     },
 };
 </script>
+
+<style>
+.input_group i{
+    left: auto !important;
+}
+</style>

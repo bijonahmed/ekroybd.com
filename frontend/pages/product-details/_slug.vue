@@ -2,54 +2,7 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <section class="search_bar">
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-3 col-md-4 col-4">
-                        <div class="logo nav_tab">
-                            <!-- mobile view sidebar  -->
-                            <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
-                                    class="fa-solid fa-bars-staggered"></i></button>
-                            <!-- sidebar offcanvas  -->
-                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-                                aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <!-- offf canvas start here  -->
-                                    <Common_MobileSidebar />
-                                </div>
-                            </div>
-                            <!-- mini tab view navbar here  -->
-                            <Common_MiniTabNavbar />
-                            <!-- nav end  -->
-                            <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
-                        </div>
-                    </div>
-                    <div class="col-6 desktop_view mini_tab_hide">
-                        <form action="" class="">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" name="" id="" placeholder="Search Product" class="form-control"> <button
-                                type="button">Search</button>
-                        </form>
-                    </div>
-                    <!-- desktop_view options  -->
-                    <DesktopViewOption />
-                    <!-- mobile view options  -->
-                    <div class="col-4 ms-auto  mobile_view">
-                        <div class="mobile_nav_option">
-                            <a class="search_form"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </div>
-                    </div>
-                    <!-- search modal  -->
-                    <Common_MobileSearchProduct />
-                </div>
-            </div>
-        </section>
+        <navbarSecond />
 
         <section class="main_content">
             <div class="container">
@@ -106,7 +59,8 @@
                                     <div class="pro_info">
                                         <div class="badgeses">
                                             <div>
-                                                <span v-if="seller.business_name !== null">{{seller.business_name}}</span>
+                                                <span v-if="seller !== ''">{{ seller.business_name
+                                                    }}</span>
                                                 <strong v-if="pro_row.free_shopping == 1">free delivery</strong>
                                                 <!-- <span style="background-color: red;"><a href="affiliate.html" style="color: #fff;">Click to Get Your affiliate link</a></span> -->
                                             </div>
@@ -134,27 +88,30 @@
 
                                         </div>
                                         <div class="price_div">
-
-                                            <h5 v-if="pro_row.discount_status == 2">
+                                            <!-- {{ pro_row }} -->
+                                            <h5 v-if="pro_row.discount_status == 1">
                                                 <div class="d-flex align-items-center">
-                                                    Now: ${{ price = (pro_row.price - pro_row.discount) }}
-                                                    <p v-if="pro_row.vat_status == 0" style="color: gray;font-size: 12px;"> +Inclusing VAT.</p>
+                                                    Now: ${{ getTotal(pro_row.last_price) }}
+                                                    <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
                                                 <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
-                                        pro_row.price }} </strike></p>
+                                                    pro_row.price.toFixed(2) }} </strike><span>{{ pro_row.discount
+                                                        }}%</span></p>
                                             </h5>
-                                            <h5 v-else-if="pro_row.discount_status == 1">
+                                            <h5 v-else-if="pro_row.discount_status == 2">
                                                 <div class="d-flex align-items-center">
-                                                    Now: ${{ price = pro_row.price - (pro_row.price * pro_row.discount / 100) }} 
-                                                    <p v-if="pro_row.vat_status == 0" style="color: gray;font-size: 12px;"> +Inclusing VAT.</p>
+                                                    Now: ${{ (pro_row.last_price).toFixed(2) }}
+                                                    <p style="color: gray;font-size: 12px;"> &nbsp;+Inclusing VAT.</p>
                                                 </div>
                                                 <p class="ms-0 d-block"><strike v-if="pro_row.discount !== 0">Was: ${{
-                                        pro_row.price }}</strike></p>
+                                                    pro_row.price.toFixed(2) }} </strike><span>${{ pro_row.discount
+                                                        }}</span></p>
                                             </h5>
-                                            <h5 v-else>${{ pro_row.price }}</h5>
+                                            <h5 v-else>${{ pro_row.last_price }} </h5>
 
-                                            <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >=1 ">In stock</p>
-                                            <p v-else-if="pro_row.stock_status == 2 && pro_row.stock_qty >=1">in stock</p>
+                                            <p v-if="pro_row.stock_status == 1 && pro_row.stock_qty >= 1">In stock</p>
+                                            <p v-else-if="pro_row.stock_status == 2 && pro_row.stock_qty >= 1">in stock
+                                            </p>
                                             <p v-else-if="pro_row.stock_status == 3">Out of stock</p>
                                             <p v-else-if="pro_row.stock_status == 4">Preorder</p>
                                             <p v-else-if="pro_row.stock_qty == 0">Out Of stock</p>
@@ -174,43 +131,63 @@
                                                 <h6 class="mb-0 ms-2">( <a href="#feedback">188 verified ratings</a>)
                                                 </h6>
                                             </div>
-                                            <div class="d-flex align-items-end">
-                                                <div class="size_attr" v-if="colorGroup">
+                                            <div class="d-flex align-items-end mb-2">
+                                                <div class="size_attr"
+                                                    v-if="colorGroup !== null && colorGroup.length > 0">
                                                     <label for="">Color:</label>
-                                                    <select v-model="color" class="form-control w-100" @change="showAttrVal()">
+                                                    <select v-model="color" class="form-control w-100"
+                                                        @change="showAttrVal()">
                                                         <option disabled value="" selected>Select</option>
-                                                        <option v-for="(item, index) in colorGroup" :key="index" :value="item.color"
-                                                            :selected="item.selected">
+                                                        <option v-for="(item, index) in colorGroup" :key="index"
+                                                            :value="item.color" :selected="item.selected">
                                                             {{ item.color }}
                                                         </option>
                                                     </select>
                                                 </div>
                                                 <!-- {{ attibute }} -->
                                                 <!-- ===================================  -->
-                                                <div class="size_attr" v-if="varientList !== null">
+                                                <div class="size_attr"
+                                                    v-if="colorGroup !== null && colorGroup.length > 0">
                                                     <label for="">Size:</label>
-                                                    <select  required class="form-control">
+                                                    <select v-model="size" required class="form-control">
                                                         <option disabled value="" selected>Select</option>
-                                                        <option v-for="(varient, index) in varientList" :key="index" @click="handleButtonClick(varient)" :value="varient.size"> {{varient.size}}</option>
+                                                        <option v-for="(varient, index) in varientList" :key="index"
+                                                            @click="handleButtonClick(varient)" :value="varient.size">
+                                                            {{ varient.size }}</option>
                                                     </select>
                                                 </div>
-                                                <div class="number">
+                                                <div class="size_attr" v-if="warranty.length > 0">
+                                                    <label for="">Warranty:</label>
+                                                    <select v-model="warranty_id" required class="form-control">
+                                                        <option disabled value="" selected>Select</option>
+                                                        <option v-for="(warranty, index) in warranty" :key="index"
+                                                            @click="updateWarranty(warranty)" :value="warranty.id">
+                                                            {{ warranty.warranty_name }}</option>
+                                                    </select>
+                                                </div>
+
+                                                <!-- ==============================  -->
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="number my-1">
                                                     <span class="minus" @click="decrement">-</span>
-                                                    <input v-model="updatedQuantity" type="number"
+                                                    <input v-model="updatedQuantity" type="number" @change="checkqty()"
                                                         @input="sanitizeInput" />
                                                     <span class="plus" @click="increment">+</span>
                                                 </div>
-                                                <!-- ==============================  -->
                                             </div>
-
-                                            <button type="button" class="btn_cart"
-                                                style="visibility: unset; max-width: 120px;"
-                                                @click="addToCart(pro_row.id)"><i
-                                                    class="fa-solid fa-cart-shopping"></i>Add to Cart </button>
+                                            <div class="d-flex align-items-center">
+                                                <button type="button" v-if="pro_row.stock_qty !== 0" class="btn_cart "
+                                                    style="visibility: unset; max-width: 120px;"
+                                                    @click="addToCart(pro_row.id)"><i
+                                                        class="fa-solid fa-cart-shopping"></i>Add to Cart </button>
+                                                <button style="max-width: 120px;" v-else class="btn_sold">Sold
+                                                    out</button>
+                                            </div>
                                             <p v-if="pro_row.free_shopping !== 1" class="m-0">Delivery by <strong>{{
-                                        futureDate }}</strong></p>
+                                                futureDate }}</strong></p>
                                             <p v-if="pro_row.free_shopping == 1" class="m-0">Free Delivery by <strong>{{
-                                                    futureDate }}</strong></p>
+                                                futureDate }}</strong></p>
                                         </div>
                                         <div class="shortDescPro">
 
@@ -233,10 +210,7 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
-
             </div>
         </section>
 
@@ -437,22 +411,27 @@
                 </div>
             </div>
         </section>
-        <Footer/>
+        <Footer />
 
     </div>
 </template>
 
 <script>
 import $ from 'jquery';
+import LogoAndPayment from '~/components/LogoAndPayment.vue';
 import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
+import navbarSecond from '../../components/navbarSecond.vue';
+
 export default {
+
     components: {
+        navbarSecond,
+        LogoAndPayment,
         Common_MobileSidebar,
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,
-
     },
 
     head: {
@@ -464,9 +443,9 @@ export default {
     }) {
         const productSlug = params.slug;
         return {
-
+            warranty_id: '',
+            warranty_name: '',
             //cart
-            loading: false,
             cart: [],
             itemCount: 0,
             subtotal: 0,
@@ -476,7 +455,7 @@ export default {
             currentIndex: 0,
             featuresimgs: '',
             slider_img: [],
-            pro_row: '',
+            pro_row: [],
             productSlug,
             historVarient: [{
                 varient_id: '',
@@ -495,6 +474,13 @@ export default {
             historVarient: [],
             colorGroup: [],
             varientList: [],
+            color: '',
+            size: '',
+            warranty: [],
+            warrantyamt: '0',
+            total: '',
+
+            loading: false,
 
         };
     },
@@ -504,18 +490,98 @@ export default {
         this.initLightSlider();
         this.fetchData();
         this.updateDateTime();
+        this.getTotal();
+        this.scrollToTop();
+
     },
     computed: {
         loggedIn() {
             return this.$auth.loggedIn;
         },
-    },
-    methods: {        
         
+    },
+    methods: {
+        scrollToTop() {
+            setTimeout(() => {
+                window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+            }, 100);
+        },
+        getTotal(price) {
+
+            const priceNumber = parseFloat(price);
+            const warrantyAmtNumber = parseFloat(this.warrantyamt);
+
+            if (isNaN(priceNumber)) {
+                console.error('Invalid price:', price);
+                return '';
+            }
+
+            if (isNaN(warrantyAmtNumber)) {
+                console.error('Invalid warranty amount:', this.warrantyamt);
+                return '';
+            }
+
+            const totalAmt = priceNumber + warrantyAmtNumber;
+            this.total = totalAmt;
+            return totalAmt.toFixed(2);
+        },
+        updateWarranty(warranty) {
+            // console.log(this.pro_row.last_price);
+            // console.log(warranty.warranty_name);
+
+            this.warrantyamt = warranty.price;
+            this.warranty_name = warranty.warranty_name;
+            this.getTotal();
+
+        },
+        checkqty() {
+            const qty = this.pro_row.stock_qty;
+            const upqty = this.updatedQuantity;
+            if (upqty >= qty) {
+                this.updatedQuantity = qty;
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "You've reached the stock limit"
+                });
+            }
+        },
         handleButtonClick(varient) {
             this.varientData = varient;
             this.pro_row.price = varient.price;
-            this.featuresimgs = varient.image;
+            this.pro_row.stock_qty = varient.qty;
+            this.featuresimgs = varient.image ? varient.image : this.pro_mainimage;
+
+            let last_price; // Declare using let instead of const
+            let d_status = this.pro_row.discount_status;
+            let dis_c = this.pro_row.discount;
+
+            if (d_status == 1) {
+                last_price = varient.price - (varient.price * dis_c / 100);
+            } else if (d_status == 2) {
+                last_price = varient.price - dis_c;
+            } else {
+                last_price = varient.price;
+            }
+
+            this.pro_row.last_price = last_price;
+
+            // console.log(this.pro_row.stock_qty);
+            // console.log(this.pro_row.last_price);
+
             // Handle button click event for the selected variant
             // console.log('Button clicked for color:', varient.color);
             // console.log('Button clicked for size:', varient.size);
@@ -535,7 +601,8 @@ export default {
                     color: color
                 }
             }).then(response => {
-                this.varientList = response.data.attribute;
+                this.varientList = response.data;
+                // console.log(response.data);
             });
 
 
@@ -593,8 +660,27 @@ export default {
 
         },
         increment() {
+            // console.log(this.pro_row.stock_qty);
             // Increase the quantity value
-            this.updatedQuantity++;
+            if (this.updatedQuantity < this.pro_row.stock_qty) {
+                this.updatedQuantity++;
+            } else {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "You've reached the stock limit"
+                });
+            }
         },
         decrement() {
             // Decrease the quantity value, but ensure it doesn't go below 1
@@ -633,7 +719,7 @@ export default {
                 itemCount += parseInt(item.quantity);
             });
             this.itemCount = itemCount;
-            console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
+            // console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
 
         },
@@ -645,26 +731,207 @@ export default {
                 this.saveCart();
             }
         },
-        addToCart(productId) {
-            const productToAdd = this.product.find((product) => product.id === productId);
-            const existingItem = this.cart.find((item) => item.product.id === productId);
+        async addToCart(productId) {
+            console.log(this.warranty_name);
+            const up_price = this.pro_row.last_price;
+            const warrantyamt = this.warrantyamt;
+            const warranty_id = this.warranty_id;
+            const warranty_name = this.warranty_name;
 
-            //console.log("------" + productToAdd.product_name);
-            //return false;
 
-            if (existingItem) {
-                existingItem.quantity += 1;
+            const pro_price = this.pro_row.price;
+            const qty = this.pro_row.stock_qty;
+
+            if (this.colorGroup.length > 0) {
+                try {
+                    const productToAdd = this.product.find((product) => product.id === productId);
+
+                    // Ensure product and quantity are valid
+                    if (!productToAdd || !this.updatedQuantity) {
+                        // console.error('Product or quantity is invalid.');
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "error",
+                            title: "Product or quantity is invalid."
+                        });
+                        return;
+                    }
+
+                    productToAdd.last_price = up_price;
+                    productToAdd.price = pro_price;
+                    productToAdd.stock_qty = qty;
+
+                    if (warranty_id) {
+                        productToAdd.warrantyamt = warrantyamt ? warrantyamt : '';
+                        productToAdd.warranty_id = warranty_id ? warranty_id : '';
+                        productToAdd.warranty_name = warranty_name ? warranty_name : '';
+                    }
+
+                    if (this.color == '' || this.size == '') {
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "error",
+                            title: "Please select an attribute"
+                        });
+                    } else {
+                        productToAdd.color = this.color;
+                        productToAdd.size = this.size;
+
+                        const existingItem = this.cart.find((item) => item.product.id === productId);
+
+                        if (existingItem) {
+                            existingItem.quantity += this.updatedQuantity;
+                        } else {
+                            this.cart.push({
+                                product: productToAdd,
+                                quantity: this.updatedQuantity,
+                            });
+
+                            const Toast = Swal.mixin({
+                                toast: true,
+                                position: "top-end",
+                                showConfirmButton: false,
+                                timer: 3000,
+                                timerProgressBar: true,
+                                didOpen: (toast) => {
+                                    toast.onmouseenter = Swal.stopTimer;
+                                    toast.onmouseleave = Swal.resumeTimer;
+                                }
+                            });
+                            Toast.fire({
+                                icon: "success",
+                                title: "Product successfully Added to cart"
+                            });
+                        }
+
+                        this.saveCart();
+                        this.cartItemCount();
+                        console.log('Item added to cart successfully.');
+                    }
+
+
+                } catch (error) {
+                    console.error('Error adding item to cart:', error);
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Product not Added to cart"
+                    });
+                }
             } else {
-                this.cart.push({
-                    product: productToAdd,
-                    quantity: this.updatedQuantity,
-                });
+                try {
+                    const productToAdd = this.product.find((product) => product.id === productId);
+                    // Ensure product and quantity are valid
+                    if (!productToAdd || !this.updatedQuantity) {
+                        // console.error('Product or quantity is invalid.');
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "error",
+                            title: "Product or quantity is invalid."
+                        });
+                        return;
+                    }
+
+                    productToAdd.last_price = up_price;
+                    productToAdd.color = this.color;
+                    productToAdd.size = this.size;
+
+                    const existingItem = this.cart.find((item) => item.product.id === productId);
+
+                    if (existingItem) {
+                        existingItem.quantity += this.updatedQuantity;
+                    } else {
+                        this.cart.push({
+                            product: productToAdd,
+                            quantity: this.updatedQuantity,
+                        });
+
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: "top-end",
+                            showConfirmButton: false,
+                            timer: 3000,
+                            timerProgressBar: true,
+                            didOpen: (toast) => {
+                                toast.onmouseenter = Swal.stopTimer;
+                                toast.onmouseleave = Swal.resumeTimer;
+                            }
+                        });
+                        Toast.fire({
+                            icon: "success",
+                            title: "Product successfully Added to cart"
+                        });
+                    }
+
+                    this.saveCart();
+                    this.cartItemCount();
+                    console.log('Item added to cart successfully.');
+
+
+                } catch (error) {
+                    console.error('Error adding item to cart:', error);
+
+                    const Toast = Swal.mixin({
+                        toast: true,
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: (toast) => {
+                            toast.onmouseenter = Swal.stopTimer;
+                            toast.onmouseleave = Swal.resumeTimer;
+                        }
+                    });
+                    Toast.fire({
+                        icon: "error",
+                        title: "Product not Added to cart"
+                    });
+                }
             }
 
-            this.saveCart();
-            this.cartItemCount();
-        },
 
+        },
         //end cart
         initLightSlider() {
             let thumbnails = document.getElementsByClassName('Slider-thumbnail');
@@ -696,6 +963,7 @@ export default {
             this.loading = false;
             const response = await this.$axios.get(`/unauthenticate/productSlug/${prosulg}`);
             this.featuresimgs = response.data.data.featuredImage;
+            this.pro_mainimage = response.data.data.featuredImage;
             this.slider_img = response.data.data.slider_img;
             this.pro_row = response.data.data.pro_row;
             this.pro_Id = response.data.data.pro_row.id;
@@ -705,7 +973,8 @@ export default {
             this.daysToAdd = response.data.data.pro_row.shipping_days;
             this.historVarient = response.data.attibute.varient;
             this.colorGroup = response.data.attibute.colorGroup;
-            // console.log(response.data.attibute.colorGroup);
+            this.warranty = response.data.warranty;
+            // console.log(response.data.warranty);
             this.loading = false;
 
             $(".product_details").html(response.data.data.pro_row.description);

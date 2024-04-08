@@ -2,54 +2,7 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <section class="search_bar">
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-3 col-md-4 col-4">
-                        <div class="logo nav_tab">
-                            <!-- mobile view sidebar  -->
-                            <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
-                                    class="fa-solid fa-bars-staggered"></i></button>
-                            <!-- sidebar offcanvas  -->
-                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-                                aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <!-- offf canvas start here  -->
-                                    <Common_MobileSidebar />
-                                </div>
-                            </div>
-                            <!-- mini tab view navbar here  -->
-                            <Common_MiniTabNavbar />
-                            <!-- nav end  -->
-                            <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
-                        </div>
-                    </div>
-                    <div class="col-6 desktop_view mini_tab_hide">
-                        <form action="" class="">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" name="" id="" placeholder="Search Product" class="form-control"> <button
-                                type="button">Search</button>
-                        </form>
-                    </div>
-                    <!-- desktop_view options  -->
-                    <DesktopViewOption />
-                    <!-- mobile view options  -->
-                    <div class="col-4 ms-auto  mobile_view">
-                        <div class="mobile_nav_option">
-                            <a class="search_form"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </div>
-                    </div>
-                    <!-- search modal  -->
-                    <Common_MobileSearchProduct />
-                </div>
-            </div>
-        </section>
+        <navbarSecond/>
         <!-- Main section start here  -->
 
         <section class="main_content ">
@@ -68,13 +21,13 @@
                         <div class="cart rounded-0 p-0" style="background-color: transparent; box-shadow: none;">
                             <div class="side_title">
                                 <h6>Wishlist</h6>
-                                <button type="button" class="btn_cart" style="visibility: unset; width: fit-content;">Add
+                                <!-- <button type="button" class="btn_cart" style="visibility: unset; width: fit-content;">Add
                                     all to
-                                    cart</button>
+                                    cart</button> -->
                             </div>
                             <div class="card_porduct userWpro">
-                                <ul>
-                                    <!-- product  -->
+                                <!-- <ul>
+                                    
                                     <li v-for="product in products" :key="product.wishid">
                                         <div class="row">
                                             <div class="col-8">
@@ -108,7 +61,61 @@
                                             </div>
                                         </div>
                                     </li>
-                                </ul>
+                                </ul> -->
+                                
+                                <div class="row">
+                                    <!-- ========== Loop ==============  -->
+                                    <!-- {{ prouducts }} -->
+                                    <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6" v-for="item in products"
+                                        :key="item.id">
+                                        <div class="product_grid text-start">
+                                    <div class="loading-indicator" v-if="loading" style="text-align: center;position: absolute; z-index: 2; left: 0; top: 0; background: #ffffff5c; height: 100%; width: 100%; object-fit: contain;">
+                                        <div class="loader-container">
+                                            <!-- <center class="loader-text">Loading...</center> -->
+                                            <img src="/loader/loader.gif" alt="Loader" />
+                                        </div>
+                                    </div>
+                                    <nuxt-link :to="`/product-details/${item.slug}`">
+                                        <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
+
+                                        <span v-if="item.free_shopping == 1">Free Delivery</span>
+                                        <!-- <strong>Official Store </strong> -->
+                                        <h1>{{ item.name }}</h1>
+                                        <div v-if="item.discount_status == 1" class="d-flex aligh-items-center">
+                                            <p>${{ item.last_price.toFixed(2) }}</p>
+                                            <p class="ms-1" v-if="item.discount !== 0"><strike>${{ item.price.toFixed(2)
+                                                    }}</strike> <span>{{ item.discount }}%</span> </p>
+                                        </div>
+                                        <div v-else-if="item.discount_status == 2" class="d-flex aligh-items-center">
+                                            <p>${{ item.last_price.toFixed(2) }}</p>
+
+                                            <p class="ms-1" v-if="item.discount !== 0"><strike>${{ item.price.toFixed(2)
+                                                    }}</strike>
+                                                <span>${{ item.discount.toFixed(2) }}</span>
+                                            </p>
+                                        </div>
+                                        <div v-else>
+                                            <p>${{ item.last_price.toFixed(2) }}</p>
+                                        </div>
+                                    </Nuxt-link>
+
+                                    <div class="d-flex align-items-center">
+                                        <div class="rating">
+                                            <i class="fa fa-star checked"></i>
+                                            <i class="fa fa-star checked"></i>
+                                            <i class="fa fa-star checked"></i>
+                                            <i class="fa fa-star checked"></i>
+                                            <i class="fa fa-star "></i>
+                                        </div>
+                                        <h6>(200)</h6>
+                                    </div>
+                                    <button type="button" class="btn_cart" @click="addToCart(item.id)">Add to
+                                        cart</button>
+                                    <!-- <button type="button" class="btn_sold">SoldOut</button> -->
+                                </div>
+                                    </div>
+                                    <!-- ================= Loop ===================  -->
+                                </div>
                             </div>
 
                         </div>
@@ -134,10 +141,12 @@ import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import userSidebar from '~/components/userSidebar.vue'
+import navbarSecond from "../../components/navbarSecond.vue";
 
 export default {
-    middleware: 'auth',
+    middleware: 'IsUser',
     components: {
+        navbarSecond,
         Common_MobileSidebar,
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,

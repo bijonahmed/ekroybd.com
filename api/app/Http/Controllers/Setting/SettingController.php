@@ -6,17 +6,20 @@ use DB;
 use Auth;
 use Helper;
 use App\Models\User;
+use App\Models\coupons;
 use App\Models\Profile;
 use App\Models\Setting;
+use App\Models\Sliders;
 use App\Models\students;
+use App\Models\dealsbanner;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\topHeaderBanner;
 use App\Rules\MatchOldPassword;
-use App\Http\Controllers\Controller;
-use App\Models\coupons;
-use App\Models\dealsbanner;
 use App\Models\sliderSideAdsModel;
+use App\Http\Controllers\Controller;
+use App\Models\companyProfile;
+use App\Models\couponUseHistory;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -628,9 +631,7 @@ class SettingController extends Controller
                 $dealsBanner->update(["imageOne" => $imageName]);
                 $dealsBanner->update(["imageTwo" => $imageNameTwo]);
             }
-        }
-
-        else if ($request->hasFile('imageTwo')) {
+        } else if ($request->hasFile('imageTwo')) {
             $imageTwo = $request->imageTwo;
             $imageNameTwo = "/bannerImage/" . time() . "." . $imageTwo->getClientOriginalExtension();
             $imageTwo->move(public_path("bannerImage"), $imageNameTwo);
@@ -638,7 +639,7 @@ class SettingController extends Controller
             if (!empty($dealsBanner->imageTwo) && File::exists(public_path($dealsBanner->imageTwo))) {
                 File::delete(public_path($dealsBanner->imageTwo));
             }
-            if (!$request->hasFile('imageOne')){
+            if (!$request->hasFile('imageOne')) {
                 $dealsBanner->update(["imageTwo" => $imageNameTwo]);
             }
         }
@@ -936,7 +937,8 @@ class SettingController extends Controller
         }
     }
 
-    public function editseller($id){
+    public function editseller($id)
+    {
         $id = (int) $id;
         $data = User::where('id', $id)->first();
         $response = [
@@ -945,7 +947,8 @@ class SettingController extends Controller
         ];
         return response()->json($response, 200);
     }
-    public function updateSeller(request $request){
+    public function updateSeller(request $request)
+    {
 
         $id = $request->id;
 
@@ -968,7 +971,7 @@ class SettingController extends Controller
         ];
         $sql = $updateCoupon->update($updateData);
 
-        if($sql){
+        if ($sql) {
             return response()->json([
                 'status'    => true,
                 'message'   => "Successful",
@@ -979,6 +982,153 @@ class SettingController extends Controller
                 'message'   => "Failed to update.",
             ]);
         }
+    }
+
+    public function saveslidersImages(Request $request)
+    {
+        // dd($request->image);
+        $validator = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,webp|dimensions:min_width=600,min_height=400,max_width=600,max_height=400',
+            'status' => 'required'
+        ], [
+            'image.dimensions' => 'The image must be 600x400 pixels.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        if ($request->hasFile('image')) {
+
+            $image = $request->file('image');
+            $imageName = "/backend/slider_images/" . time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path("/backend/slider_images/"), $imageName);
+            // dd($imageName);
+            // return false;
+            $slider = Sliders::create([
+                'images' => $imageName,
+                'status' => $request->status, // Assuming status is part of the sliders table
+            ]);
+
+            if ($slider) {
+                return response()->json(["message" => "Successfully Added"], 200);
+            } else {
+                return response()->json(["message" => "Failed to add slider"], 500);
+            }
+        }
+    }
+    public function deleteSliderimage(Request $request)
+    {
+        $id = $request->id;
+        $slider = Sliders::findOrFail($id);
+
+        $slider->delete();
+
+        return response()->json(['message' => 'Slider image deleted successfully'], 200);
+    }
+    public function updateCompanyProfile(request $request)
+    {
+        // dd($request);
+        // return false;
+        $validator = Validator::make($request->all(), [
+            'company_name' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+            'setup_charge' => 'nullable|numeric',
+            'transaction_fee' => 'nullable|numeric',
+            'other_charges' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'industry' => 'nullable|max:255',
+            'about' => 'nullable|string',
+        ], [
+            'transaction_fee' => 'Cash on delivery fee must be only number',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()->toArray()], 422);
+        }
+
+        $companyId = $request->id;
+        // dd($companyId);
+        // return false;
+        $companyProfile = CompanyProfile::find($companyId);
+
+        if (!$companyProfile) {
+            return response()->json([
+                'error' => 'Company profile not found.'
+            ], 404);
+        }
+
+        $updateData = [
+            'company_name' => $request->company_name,
+            'address' => $request->address,
+            'setup_charge' => $request->setup_charge,
+            'transaction_fee' => $request->transaction_fee,
+            'other_charges' => $request->other_charges,
+            'phone' => $request->phone,
+            'email' => $request->email,
+            'founded_year' => $request->found_year,
+            'industry' => $request->industry,
+            'about' => $request->about,
+        ];
+
+        // Handle logo file upload if present
+        if ($request->hasFile('logo')) {
+            $validator = Validator::make($request->all(), [
+                'logo' => 'nullable|mimes:jpg,png,jpeg,gif,webp|max:2048',
+            ]);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()->toArray()], 422);
+            }
+
+            $image = $request->file('logo');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('/backend/upload/'), $imageName);
+            $updateData['logo'] = '/backend/upload/' . $imageName;
+        }
+
+        // Update the company profile
+        $companyProfile->update($updateData);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Company profile settings updated successfully.'
+        ], 200);
+    }
+    public function getProfileData()
+    {
+        $getData = companyProfile::get()->first();
+        $getData['logo'] = url($getData->logo);
+        return response()->json($getData);
+    }
+
+    public function getcoupos(Request $request)
+    {
+        $minShop = $request->query('minShop');
+        $user_id = $request->query('user_id');
+
         
+        $couponList = coupons::where('min_shopping', '<', $minShop)
+            ->where('status', 1)
+            ->limit(3)
+            ->get();
+
+            
+        foreach ($couponList as $key => $coupon) {
+            
+            $usageRecord = CouponUseHistory::where('user_id', $user_id)
+                ->where('coupon_id', $coupon->id)
+                ->first();
+
+                
+            if ($usageRecord) {
+                unset($couponList[$key]);
+            }
+        }
+
+        // dd($couponList);
+        // return false;
+        
+        return response()->json(['couponList' => array_values($couponList->toArray())]);
     }
 }

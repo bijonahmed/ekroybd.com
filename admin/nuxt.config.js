@@ -32,6 +32,7 @@ export default {
       { rel: "stylesheet", href: "/css/bootstrap.min.css" },
       { rel: "stylesheet", href: "/css/app.css" },
       { rel: "stylesheet", href: "/css/icons.css" },
+      // { rel: "stylesheet", href: "/css/adminlte.min.css" },
     ],
     script: [
       { src: "/js/bootstrap.bundle.min.js" },
@@ -47,8 +48,9 @@ export default {
       { src: "/plugins/notifications/js/notifications.min.js" },
       { src: "/plugins/notifications/js/notification-custom-script.js" },
       { src: "https://cdn.jsdelivr.net/npm/sweetalert2@11" },
-      //end notification
+      //end notification 
       { src: "/js/pace.min.js" },
+      { src: "/js/adminlte.js" },
     ],
   },
   css: [
@@ -93,8 +95,9 @@ export default {
   },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
- baseURL: "http://127.0.0.1:8000/api",
-  // baseURL: "https://api.ekroybd.com/api/",
+//  baseURL: "http://127.0.0.1:8000/api",
+  // baseURL: "https://api.ekroybd.com/api/",  
+  baseURL: process.env.NODE_ENV === 'production' ? 'https://api.ekroybd.com/api/' : 'http://127.0.0.1:8000/api/',
   },
   // router: {
   //   middleware: ['auth']

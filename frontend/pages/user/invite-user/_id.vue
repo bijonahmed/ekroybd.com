@@ -139,6 +139,7 @@ export default {
     head: {
         title: 'Login',
     },
+    middleware: 'Isuser',
     data() {
         return {
             insertdata: {

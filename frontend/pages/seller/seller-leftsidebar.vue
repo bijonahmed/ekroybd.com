@@ -59,7 +59,7 @@
 
 <script>
 export default {
-    middleware: 'auth',
+    middleware: 'IsSeller',
     data() {
         return {
             loading: false,

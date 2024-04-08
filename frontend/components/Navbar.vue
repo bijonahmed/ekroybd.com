@@ -1,17 +1,21 @@
 <template>
-<div>
-    <section class="search_bar">
+    <!-- <div> -->
+    <section class="search_bar ">
         <div class="container">
             <div class="row justify-content-between align-items-center">
                 <div class="col-lg-3 col-md-4 col-8">
                     <div class="logo nav_tab">
                         <!-- mobile view sidebar  -->
-                        <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i class="fa-solid fa-bars-staggered"></i></button>
+                        <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
+                            data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
+                                class="fa-solid fa-bars-staggered"></i></button>
 
                         <!-- sidebar offcanvas  -->
-                        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+                        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
+                            aria-labelledby="offcanvasExampleLabel">
                             <div class="offcanvas-header">
-                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
+                                    aria-label="Close"></button>
                                 <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
                             </div>
                             <div class="offcanvas-body">
@@ -28,16 +32,21 @@
                                             </div>
                                             <ul>
                                                 <li v-if="loggedIn">
-                                                    <nuxt-link to="/user/user-orders"><i class="fa-solid fa-box"></i>Order</nuxt-link>
+                                                    <nuxt-link to="/user/user-orders"><i
+                                                            class="fa-solid fa-box"></i>Order</nuxt-link>
                                                 </li>
                                                 <li v-if="loggedIn">
-                                                    <nuxt-link to="/user/my-reviews"><i class="fa-regular fa-comment-dots"></i>Pending Reviews</nuxt-link>
+                                                    <nuxt-link to="/user/my-reviews"><i
+                                                            class="fa-regular fa-comment-dots"></i>Pending
+                                                        Reviews</nuxt-link>
                                                 </li>
                                                 <li v-if="loggedIn">
-                                                    <nuxt-link to="#"><i class="fa-solid fa-ticket-simple"></i>Voucher </nuxt-link>
+                                                    <nuxt-link to="#"><i class="fa-solid fa-ticket-simple"></i>Voucher
+                                                    </nuxt-link>
                                                 </li>
                                                 <li v-if="loggedIn">
-                                                    <nuxt-link to="/user/user-whichlist"><i class="fa-solid fa-heart"></i>Save items </nuxt-link>
+                                                    <nuxt-link to="/user/user-whichlist"><i
+                                                            class="fa-solid fa-heart"></i>Save items </nuxt-link>
                                                 </li>
                                             </ul>
                                         </div>
@@ -53,7 +62,9 @@
                                             </div>
                                             <ul>
                                                 <li v-for="childCategory in category.children" :key="childCategory.id">
-                                                    <a href="#" @click="redirectCategory(category.slug)">  <i class="fa-solid fa-list" style="font-size: 10px;"></i>{{ childCategory.name }}</a>
+                                                    <a href="#" @click="redirectCategory(category.slug)"> <i
+                                                            class="fa-solid fa-list" style="font-size: 10px;"></i>{{
+                                                                childCategory.name }}</a>
                                                 </li>
 
                                             </ul>
@@ -83,18 +94,28 @@
                                 <nav>
                                     <ul v-for="(category, index) in categories" :key="category.id">
                                         <li :key="category.id" v-if="index < limit">
-                                            <a href="#" class="d-flex justify-content-between align-items-center" @click="redirectCategory(category.slug)">
+                                            <a href="#" class="d-flex justify-content-between align-items-center"
+                                                @click="redirectCategory(category.slug)">
                                                 <div class="d-flex align-items-center">
                                                     <i class="fa-solid fa-list"></i>
-                                                    {{ category.name }}</div> <i class="fa-solid fa-angle-right"></i>
+                                                    {{ category.name }}
+                                                </div> <i class="fa-solid fa-angle-right"></i>
                                             </a>
                                             <div class="sub_menu">
-                                                <div class="row" v-if="category.children && category.children.length > 0">
-                                                    <div class="col-4" v-for="childCategory in category.children" :key="childCategory.id">
-                                                        <h6><a href="#" @click="redirectCategory(childCategory.slug)"> {{ childCategory.name }}</a></h6>
+                                                <div class="row"
+                                                    v-if="category.children && category.children.length > 0">
+                                                    <div class="col-4" v-for="childCategory in category.children"
+                                                        :key="childCategory.id">
+                                                        <h6><a href="#" @click="redirectCategory(childCategory.slug)">
+                                                                {{
+                                                                    childCategory.name }}</a></h6>
 
-                                                        <ul v-if="childCategory.children && childCategory.children.length > 0">
-                                                            <li v-for="inSubCategory in childCategory.children" :key="inSubCategory.id"><a href="#" @click="redirectCategory(inSubCategory.slug)">{{ inSubCategory.name }}</a></li>
+                                                        <ul
+                                                            v-if="childCategory.children && childCategory.children.length > 0">
+                                                            <li v-for="inSubCategory in childCategory.children"
+                                                                :key="inSubCategory.id"><a href="#"
+                                                                    @click="redirectCategory(inSubCategory.slug)">{{
+                                                                        inSubCategory.name }}</a></li>
 
                                                         </ul>
                                                     </div>
@@ -105,8 +126,10 @@
                                     </ul>
                                     <ul>
                                         <li>
-                                            <Nuxt-link to="/category/all-categorys" class="d-flex justify-content-between">
-                                                <div><img src="/images/cat_svg/more-100.png" alt="">Other Categories</div>
+                                            <Nuxt-link to="/category/all-categorys"
+                                                class="d-flex justify-content-between">
+                                                <div><img src="/images/cat_svg/more-100.png" alt="">Other Categories
+                                                </div>
                                                 <div><i class="fa-solid fa-angle-right"></i></div>
                                             </Nuxt-link>
                                         </li>
@@ -116,21 +139,25 @@
                         </div>
                         <!-- nav end  -->
 
-                        <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
+                        <Nuxt-link to="/"><img src="/images/logo.png" alt="" class="img-fluid navLogo"
+                                width="200px"></Nuxt-link>
                     </div>
                 </div>
 
                 <div class="col-6 desktop_view mini_tab_hide">
                     <form action="" class="">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" name="" id="" placeholder="Search product" class="form-control"> <button type="button">Search</button>
+                        <input type="text" id="autocomplete-input" class="form-control ui-menu-item"
+                            placeholder="Search products...">
+                        <button type="button">Search</button>
                     </form>
                 </div>
                 <!-- desktop_view options  -->
                 <div class="col-lg-3 col-md-2 col-2 desktop_view">
                     <div class="menus">
                         <div class="dropdown">
-                            <button class="btn  dropdown-toggle btn_account b_link " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn  dropdown-toggle btn_account b_link " type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="fas fa-user"></i> Account
                             </button>
                             <ul class="dropdown-menu">
@@ -138,8 +165,8 @@
                                     <button class="drop_btn" type="button" @click="logout">Sign Out</button>
                                 </span>
                                 <span v-else>
-                                    <button class="drop_btn" type="button" @click="openLoginModal">SignIn</button>
-                                    <nuxt-link to="/login" style="color: #fff;" class="drop_btn" type="button" >Signup</nuxt-link>
+                                    <button class="drop_btn" type="button" @click="openLoginModal">Sign In</button>
+                                    <nuxt-link to="/login" class="drop_btn text-white" type="button">Signup</nuxt-link>
                                 </span>
 
                                 <li v-if="loggedIn">
@@ -164,7 +191,8 @@
                         </div>
                         <!-- help -->
                         <div class="dropdown">
-                            <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button class="btn  dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
                                 <i class="fas fa-circle-question"></i> Help
                             </button>
                             <ul class="dropdown-menu">
@@ -178,7 +206,8 @@
                             </ul>
                         </div>
                         <!-- cart  -->
-                        <Nuxt-link to="/cart" class="cart_count"><i class="fas fa-cart-shopping"></i><span style="top: -16px;">{{ itemCount }}</span>Cart</Nuxt-link>
+                        <Nuxt-link to="/cart" class="cart_count"><i class="fas fa-cart-shopping"></i><span
+                                style="top: -16px;">{{ itemCount }}</span>Cart</Nuxt-link>
                     </div>
                 </div>
                 <!-- mobile view options  -->
@@ -190,27 +219,27 @@
                 <!-- search modal  -->
                 <div class="search_form_modal  ">
                     <div class="search_box_main">
+                        <!-- <form action=""> -->
                         <div class="bar_search ">
                             <div>
                                 <a class="close_search_modal"><i class="fa-solid fa-arrow-left"></i></a>
                             </div>
                             <div>
-                                <input type="text" name="" placeholder="Search Product, Brands, Categories" id="">
+                                <input type="text" id="autocomplete-input_mobile" name=""
+                                    placeholder="Search Product, Categories">
                             </div>
                             <div>
                                 <button type="submit"> <i class="fa-solid fa-magnifying-glass"></i></button>
                             </div>
                         </div>
+                        <!-- </form> -->
                         <ul>
-                            <li>
-                                <img src="images/product(1).jpg" alt="">
-                                <a href="#">Cat ,Product or brand name here Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis rerum nemo iste hic nobis, porro iusto officiis eum sit eos!</a>
+                            <li v-for="(item, key) in searchloop" :key="key">
+                                <nuxt-link v-if="item.type == 'category'"
+                                    :to="`/category/category-grid?slug=${item.catslug}`">{{ item.label }}</nuxt-link>
+                                <nuxt-link v-if="item.type == 'product'" :to="`/product-details/${item.slug}`">{{
+                                    item.label }}</nuxt-link>
                             </li>
-                            <li>
-                                <img src="images/product(1).jpg" alt="">
-                                <a href="#">Cat ,Product or brand name here Lorem ipsum dolor sit amet, consectetur adipisicing elit. Perferendis rerum nemo iste hic nobis, porro iusto officiis eum sit eos!</a>
-                            </li>
-
                         </ul>
                     </div>
                 </div>
@@ -218,7 +247,7 @@
             </div>
         </div>
     </section>
-</div>
+    <!-- </div> -->
 </template>
 
 <script>
@@ -232,9 +261,103 @@ export default {
             categories: [],
             itemCount: 0,
             //loggedIn: false,
+            searchloop: [],
         };
     },
     async mounted() {
+        if (process.client) {
+            $(document).ready(() => {
+                var self = this;
+                $('#autocomplete-input').autocomplete({
+                    source: (request, response) => {
+                        const searchTerm = request.term;
+                        if (searchTerm.length >= 1) {
+                            // Make Axios request to fetch products dynamically
+                            this.$axios.get(`/unauthenticate/products/search?term=${searchTerm}`)
+                                .then(res => {
+                                    //console.log("search console return " + res.data);
+                                    response(res.data);
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching products:', error);
+                                    response([]); // Return empty array in case of error
+                                });
+                        } else {
+                            response([]); // Return empty array if search term is too short
+                        }
+                    },
+                    minLength: 2, // Minimum characters before autocomplete starts
+
+                    select: function (event, ui) {
+                        if (ui.item.type == 'category') {
+                            self.$router.push({
+                                path: '/category/category-grid',
+                                query: {
+                                    slug: ui.item.catslug
+                                }
+                            });
+                        }
+
+                        if (ui.item.type == 'product') {
+                            self.$router.push({
+                                path: '/product-details/' + ui.item.slug,
+
+                            });
+                        }
+
+                        var label = ui.item.label;
+                        var value = ui.item.value;
+                        // Store the selected value in session storage
+                        sessionStorage.setItem('valueSelectedForAutocomplete', value);
+                    }
+                });
+
+                $('#autocomplete-input_mobile').autocomplete({
+                    source: (request, response) => {
+                        const searchTerm = request.term;
+                        if (searchTerm.length >= 1) {
+                            // Make Axios request to fetch products dynamically
+                            this.$axios.get(`/unauthenticate/products/search?term=${searchTerm}`)
+                                .then(res => {
+                                    //console.log("search console return " + res.data);
+                                    // response(res.data);
+                                    this.searchloop = res.data;
+                                })
+                                .catch(error => {
+                                    console.error('Error fetching products:', error);
+                                    response([]); // Return empty array in case of error
+                                });
+                        } else {
+                            response([]); // Return empty array if search term is too short
+                        }
+                    },
+                    minLength: 2, // Minimum characters before autocomplete starts
+
+                    select: function (event, ui) {
+                        if (ui.item.type == 'category') {
+                            self.$router.push({
+                                path: '/category/category-grid',
+                                query: {
+                                    slug: ui.item.catslug
+                                }
+                            });
+                        }
+
+                        if (ui.item.type == 'product') {
+                            self.$router.push({
+                                path: '/product-details/' + ui.item.slug,
+
+                            });
+                        }
+
+                        var label = ui.item.label;
+                        var value = ui.item.value;
+                        // Store the selected value in session storage
+                        sessionStorage.setItem('valueSelectedForAutocomplete', value);
+                    }
+                });
+            });
+        }
         // this.fetchUserData();
         this.$eventBus.$on('cartItemCountUpdated', this.handleCartItemCountUpdated);
         this.loadCart();
@@ -303,7 +426,7 @@ export default {
         },
         redirectCategory(slug) {
             this.$router.push({
-                path: '/category/category-grid',
+                path: '/category/category-list',
                 query: {
                     slug: slug
                 }
@@ -315,7 +438,46 @@ export default {
         },
         async logout() {
             await this.$auth.logout()
+            
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                },
+            });
+            Toast.fire({
+                icon: "success",
+                title: "Successfully Logout!",
+            });
         }
     },
 };
 </script>
+<style scoped>
+.ui-menu-item>a.ui-corner-all {
+    display: block;
+    padding: 3px 15px;
+    clear: both;
+    font-weight: normal;
+    line-height: 18px;
+    color: #555555;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.ui-state-hover,
+.ui-state-active {
+    color: #ffffff;
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
+}
+</style>

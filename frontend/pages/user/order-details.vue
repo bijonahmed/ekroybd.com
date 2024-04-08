@@ -2,58 +2,11 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <section class="search_bar">
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-3 col-md-4 col-4">
-                        <div class="logo nav_tab">
-                            <!-- mobile view sidebar  -->
-                            <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
-                                    class="fa-solid fa-bars-staggered"></i></button>
-                            <!-- sidebar offcanvas  -->
-                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-                                aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <!-- offf canvas start here  -->
-                                    <Common_MobileSidebar />
-                                </div>
-                            </div>
-                            <!-- mini tab view navbar here  -->
-                            <Common_MiniTabNavbar />
-                            <!-- nav end  -->
-                            <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
-                        </div>
-                    </div>
-                    <div class="col-6 desktop_view mini_tab_hide">
-                        <form action="" class="">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" name="" id="" placeholder="Search Product" class="form-control"> <button
-                                type="button">Search</button>
-                        </form>
-                    </div>
-                    <!-- desktop_view options  -->
-                    <DesktopViewOption />
-                    <!-- mobile view options  -->
-                    <div class="col-4 ms-auto  mobile_view">
-                        <div class="mobile_nav_option">
-                            <a class="search_form"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </div>
-                    </div>
-                    <!-- search modal  -->
-                    <Common_MobileSearchProduct />
-                </div>
-            </div>
-        </section>
+        <navbarSecond />
         <!-- Main section start here  -->
 
         <section class="main_content ">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-3">
                         <userSidebar />
@@ -66,16 +19,17 @@
                             </div>
                         </div>
                         <div class="main_profile">
-
+                            
                             <div class="">
 
                                 <div>
                                     <div class="d-flex justify-content-start">
-                                        <nuxt-link to='/user/user-orders' class="btn_edit"> <i
+                                        <nuxt-link :to='`/user/track-order?orderId=${orderData.orderId}`' class="btn_edit"> <i
                                                 class="fa-solid fa-arrow-left"></i> </nuxt-link>
                                     </div>
+                                    
 
-                                    <div class="text-center" style="text-transform: uppercase;">Orders Details </div>
+                                    <div class="text-center" style="text-transform: uppercase;">Invoice </div>
                                     <br />
                                     <div class="row">
 
@@ -101,13 +55,16 @@
 
                                             </div>
                                         </div>
-                                        <br />
-                                        <hr />
+                                        <hr class="my-2" />
                                     </div>
-
-                                    <center><strong style="min-width: 100px; padding-bottom: 10px;">Order Status:</strong>
-                                        <strong>{{ orderstatus }}</strong>
-                                    </center><br>
+                                    <div class="row my-3">
+                                        <div class="col-md-12 ">
+                                            <div class="d-flex justify-content-between">
+                                                <strong>Order Id: #{{ orderData.orderId }}</strong>
+                                                <strong>Order status:{{ orderstatus }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <table width="100%" border="0" class="table table-bordered hover">
@@ -124,17 +81,17 @@
                                             <div align="center">Total</div>
                                         </th>
                                     </tr>
-                                    <tr v-for="(order, index) in orders" :key="index" class="billing">
+                                    <tr v-for="(order, index) in products" :key="index" class="billing">
                                         <th>{{ index + 1 }}</th>
-                                        <td style="padding-bottom: 10px;">{{ order.product_name }}</td>
+                                        <td style="padding-bottom: 10px;">{{ order.pro_name }}</td>
                                         <td>
-                                            <div align="center">{{ order.quantity }}</div>
+                                            <div align="center">{{ order.qty }}</div>
                                         </td>
                                         <td>
-                                            <div align="center">{{ order.price }}</div>
+                                            <div align="center">{{ order.last_price.toFixed(2) }}</div>
                                         </td>
                                         <td>
-                                            <div align="center">{{ order.total }}</div>
+                                            <div align="center">{{ (order.qty*order.last_price).toFixed(2) }}</div>
                                         </td>
                                     </tr>
                                 </table>
@@ -146,7 +103,7 @@
                                         </li>
                                         <li class="d-flex justify-content-end">
                                             <strong>Total Ammount:</strong>
-                                            <strong style="min-width: 100px;">{{ totalAmount }}</strong>
+                                            <strong style="min-width: 100px;">{{ totalAmount.toFixed(2) }}</strong>
                                         </li>
                                     </ul>
                                 </div>
@@ -173,10 +130,11 @@ import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import userSidebar from '~/components/userSidebar.vue';
+import navbarSecond from '../../components/navbarSecond.vue';
 
 export default {
 
-    middleware: 'auth',
+    middleware: 'IsUser',
     components: {
         Common_MobileSidebar,
         Common_MiniTabNavbar,
@@ -194,6 +152,7 @@ export default {
             orderData: '',
             orders: [],
             errors: {},
+            products: [],
         }
     },
     mounted() {
@@ -204,12 +163,10 @@ export default {
     },
     computed: {
         totalQuantity() {
-            // Calculate total quantity
-            return this.orders.reduce((total, order) => total + order.quantity, 0);
+            return this.products.reduce((acc, product) => acc + product.qty, 0);
         },
         totalAmount() {
-            // Calculate total amount
-            return this.orders.reduce((total, order) => total + order.total, 0);
+            return this.products.reduce((acc, product) => acc + product.last_price * product.qty, 0)
         },
     },
     methods: {
@@ -220,13 +177,14 @@ export default {
                 this.orders = response.data.orderdata;
                 this.orderstatus = response.data.orderrow;
                 this.orderData = response.data.orderData;
+                this.products = response.data.products;
             })
-                .catch(error => {
-                    // Handle error
-                })
-                .finally(() => {
-                    this.loading = false; // Hide loader after response
-                });
+            .catch(error => {
+                // Handle error
+            })
+            .finally(() => {
+                this.loading = false; // Hide loader after response
+            });
 
         },
         logout() {
@@ -277,4 +235,5 @@ export default {
 
 .billing {
     font-size: 13px;
-}</style>
+}
+</style>

@@ -35,6 +35,7 @@ use PhpParser\Node\Stmt\TryCatch;
 use App\Models\sliderSideAdsModel;
 use App\Models\User as ModelsUser;
 use App\Http\Controllers\Controller;
+use App\Models\couponUseHistory;
 use App\Models\ProductAdditionalImg;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -42,6 +43,8 @@ use App\Models\ProductAttributeValue;
 use App\Models\ProductVarrientHistory;
 use Illuminate\Database\QueryException;
 use App\Models\HomeAroductSliderCategory;
+use App\Models\product_warranty;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
 use Workbench\App\Models\User as AppModelsUser;
 
 class UnauthenticatedController extends Controller
@@ -116,20 +119,61 @@ class UnauthenticatedController extends Controller
         $topSellingProducts = OrderHistory::selectRaw('product_id, SUM(quantity) as total_quantity')->groupBy('product_id')->orderBy('total_quantity', 'desc')->limit(20)->get();
 
         foreach ($topSellingProducts as $product) {
-            $productDetails = Product::select('name', 'slug', 'thumnail_img', 'price', 'discount', 'flat_rate_price', 'free_shopping')
-                ->where('id', $product->product_id)
+            $productDetails = Product::select(
+                'product.name',
+                'product.slug',
+                'product.thumnail_img',
+                'product.price',
+                'product.discount',
+                'product.discount_status',
+                'product.vat_status',
+                'product.vat',
+                'product.flat_rate_price',
+                'product.free_shopping',
+                'brands.name as brand_name'
+            )
+                ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+                ->where('product.id', $product->product_id)
                 ->first();
 
+            $vat = $productDetails->vat ? $productDetails->vat : '0';
+            $price = $productDetails->price + ($productDetails->price * $vat / 100);
+
+            $percent_discount = $price - ($price * $productDetails->discount / 100);
+            $fixed_discount = $price - $productDetails->discount;
+
+
+
+            if ($productDetails->discount_status == 1) {
+                $last_price = $percent_discount;
+            } elseif ($productDetails->discount_status == 2) {
+                $last_price = $fixed_discount;
+            } else {
+                $last_price = $price;
+            }
+
+            $product->id                    = $product->product_id;
             $product->name                  = $productDetails->name;
+            $product->product_name          = $productDetails->name;
             $product->slug                  = $productDetails->slug;
+            $product->pro_slug                  = $productDetails->slug;
             $product->thumnail_img          = url($productDetails->thumnail_img);
 
             $product->price                 = $productDetails->price;
             $product->discount              = $productDetails->discount;
-            $product->flat_rate_price      = $productDetails->flat_rate_price;
+            $product->discount_status       = $productDetails->discount_status;
+            $product->percent_discount      = $percent_discount;
+            $product->fixed_discount        = $fixed_discount;
             $product->free_shopping         = $productDetails->free_shopping;
-            // $product->name          = $productDetails->name;
-            // $product->slug          = $productDetails->slug;
+            $product->flat_rate_price       = $productDetails->flat_rate_price;
+            $product->vat_status            = $productDetails->vat_status;
+            $product->vat                   = $productDetails->vat;
+
+            $product->brand_name            = $productDetails->brand_name;
+            $product->last_price            = $last_price; //number_format($last_price, 2);
+
+            $product->stock_qty             = $productDetails->stock_qty;
+            $product->stock_status          = $productDetails->stock_status;
         }
 
         return response()->json($topSellingProducts, 200);
@@ -151,8 +195,6 @@ class UnauthenticatedController extends Controller
 
     public function productCategory(Request $request)
     {
-
-
         $catIds = HomeAroductSliderCategory::where('status', 1)->pluck('category_id')->toArray();
         $commaSeparatedIds = implode(',', $catIds);
         // dd($commaSeparatedIds);
@@ -160,38 +202,97 @@ class UnauthenticatedController extends Controller
         $category_ids = explode(',', $category_id);
         $categorys = ProductCategory::join('product', 'product.id', '=', 'produc_categories.product_id')
             ->join('categorys', 'categorys.id', '=', 'produc_categories.category_id')
-            ->select('produc_categories.product_id', 'product.name', 'product.slug', 'product.thumnail_img', 'product.price', 'product.discount','product.discount_status', 'product.flat_rate_status', 'product.flat_rate_price', 'product.free_shopping', 'categorys.name as cate_name', 'categorys.slug as catslug')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'brands.id', '=', 'product.brand')
+            ->select(
+                'produc_categories.product_id',
+                'product.name',
+                'product.seller_id',
+                'product.slug',
+                'product.thumnail_img',
+                'product.price',
+                'product.brand',
+                'product.discount',
+                'product.discount_status',
+                'product.flat_rate_status',
+                'product.flat_rate_price',
+                'product.free_shopping',
+                'product.vat_status',
+                'product.vat',
+                'product.stock_qty',
+                'product.stock_status',
+                'product.shipping_days',
+                'categorys.name as cate_name',
+                'categorys.slug as catslug',
+                'users.business_name as seller_name',
+                'users.business_name_slug as seller_slug',
+                'brands.name as brand_name'
+            )
             ->whereIn('produc_categories.category_id', $category_ids)
             ->orderByDesc('product.id')
-            ->limit(10)
+            ->limit(20)
             ->get();
-            
+
+
         $groupedCategories = $categorys->groupBy('cate_name');
         $categories = [];
         foreach ($groupedCategories as $categoryName => $categoryGroup) {
             $products = [];
             foreach ($categoryGroup as $v) {
+
+
+                $last_price = 0;
+
+                $vat = $v->vat ? $v->vat : '0';
+                $price = $v->price + ($v->price * $vat / 100);
+
+                $percent_discount = $price - ($price * $v->discount / 100);
+                $fixed_discount = $price - $v->discount;
+
+                if ($v->discount_status == 1) {
+                    $last_price = $percent_discount;
+                } elseif ($v->discount_status == 2) {
+                    $last_price = $fixed_discount;
+                } else {
+                    $last_price = $v->price;
+                }
+
+
                 $products[] = [
                     'product_id'        => $v->product_id,
                     'id'                => $v->product_id,
                     'name'              => substr($v->name, 0, 12) . '...',
+                    'product_name'      => substr($v->name, 0, 12) . '...',
                     'thumnail_img'      => !empty($v->thumnail_img) ? url($v->thumnail_img) : "",
                     'thumnail'          => !empty($v->thumnail_img) ? url($v->thumnail_img) : "",
                     'slug'              => $v->slug,
-                    'price'             => $v->price,
+                    'pro_slug'          => $v->slug,
+                    'price'             => $price,
                     'discount'          => $v->discount,
-                    'discount_status'          => $v->discount_status,
+                    'discount_status'   => $v->discount_status,
                     'flat_rate_status'  => $v->flat_rate_status,
                     'flat_rate_price'   => $v->flat_rate_price,
                     'free_shopping'     => $v->free_shopping,
+                    'vat_status'        => $v->vat_status,
+                    'vat'               => $v->vat,
 
-                    'product_name'              => $v->name,
+                    'product_name'      => $v->name,
                     'image'             => url($v->thumnail_img),
-                    'thumnail_img'             => url($v->thumnail_img),
+                    'thumnail_img'      => url($v->thumnail_img),
                     'business_name'     => $v->business_name,
                     'stock_quantity'    => $v->stock_qty,
                     'mini_quantity'     => $v->stock_mini_qty,
+                    'percent_discount'  => $percent_discount,
+                    'fixed_discount'    => $fixed_discount,
+                    'brand'             => $v->brand_name,
 
+                    'seller_name'       => $v->seller_name,
+                    'seller_slug'  => $v->seller_slug,
+                    'shipping_days'     => $v->shipping_days,
+                    'last_price'        => $last_price,
+                    'stock_qty'         => $v->stock_qty,
+                    'stock_status'      => $v->stock_status,
+                    // 'vat_include' => $last_price,
                 ];
             }
             // Add the category and its products to the final result
@@ -201,7 +302,11 @@ class UnauthenticatedController extends Controller
                 'products' => $products,
             ];
         }
+
+        // dd($products);
+        // return false;
         $data['result']  = !empty($categories) ? $categories : "";
+        $data['product']  = !empty($products) ? $products : "";
         return response()->json($data, 200);
     }
 
@@ -216,7 +321,7 @@ class UnauthenticatedController extends Controller
             ->get();
 
         //dd($categorys);
-        //$categorys = Categorys::where('status', 1)->orderBy("name", "asc")->get();;
+        // $categorys = Categorys::where('status', 1)->orderBy("name", "asc")->get();;
         return response()->json($categorys);
     }
 
@@ -311,17 +416,11 @@ class UnauthenticatedController extends Controller
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length("aes-256-cbc"));
         $encryptedText = $this->encryptText($originalText, $encryptionKey, $iv);
         $cleanedEncryptedText = str_replace(['\\', '/'], '', $encryptedText);
-        //echo "Cleaned Encrypted Text: " . $cleanedEncryptedText . "\n";
-
-        //echo $encryptedText;exit; 
         $resetlink = "$hostname/resetpassword/$cleanedEncryptedText";
 
         $user = User::where('email', $email)->first();
         if (!empty($user)) {
-            // Update the email
             $user->update(['remember_token' => $cleanedEncryptedText]);
-            // Optionally, you can retrieve the updated user data
-            //$updatedUser = User::find($user->id);
         }
 
         // You can pass data to the email view if needed
@@ -448,6 +547,8 @@ class UnauthenticatedController extends Controller
     public function findProductSlug($slug)
     {
         $data['pro_row'] = Product::where('product.slug', $slug)
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
             ->select(
                 'product.id',
                 'product.id as product_id',
@@ -456,6 +557,7 @@ class UnauthenticatedController extends Controller
                 'product.slug as pro_slug',
                 'product.thumnail_img',
                 'description',
+                'product.brand',
                 'short_description',
                 DB::raw('CAST(product.price AS SIGNED) as price'), // Cast product.price as decimal
                 'product.discount',
@@ -465,30 +567,116 @@ class UnauthenticatedController extends Controller
                 'product.free_shopping',
                 'product.flat_rate_price',
                 'product.brand',
-                "product.stock_status",
-                "product.shipping_days",
-                "product.unit",
-                "product.vat"   ,   
-                "product.vat_status",
+                'product.stock_status',
+                'product.shipping_days',
+                'product.unit',
+                'product.vat',
+                'product.vat_status',
+                'users.business_name as seller_name',
+                'users.business_name_slug as seller_slug',
+                'brands.name as brand_name',
+                'brands.slug as brand_slug'
             )
             ->first();
+
+
+        $last_price = 0;
+        
+        $v = $data['pro_row'];
+        $vat = $v->vat ? $v->vat : '0';
+        $price = $v->price + ($v->price * $vat / 100);
+
+        $percent_discount = $price - ($price * $v->discount / 100);
+        $fixed_discount = $price - $v->discount;
+
+        if ($v->discount_status == 1) {
+            $last_price = $percent_discount;
+        } elseif ($v->discount_status == 2) {
+            $last_price = $fixed_discount;
+        } else {
+            $last_price = $price;
+        }
+
+        // Add last_price to the pro_row array
+        $data['pro_row']->last_price = $last_price;
+
         //dd($data['pro_row']);
-        $product_chk       = Product::where('product.slug', $slug)
-            ->select('product.id', 'product.id as product_id', 'product.name as pro_name', 'product.slug as pro_slug', 'product.thumnail_img', 'description', 'product.price', 'product.discount', 'product.stock_qty', 'product.stock_mini_qty', 'product.free_shopping')
+        $product_chk = Product::where('product.slug', $slug)
+            ->select(
+                'product.id',
+                'product.id as product_id',
+                'product.name as pro_name',
+                'product.slug as pro_slug',
+                'product.thumnail_img',
+                'description',
+                'product.price',
+                'product.seller_id',
+                'product.discount_status',
+                'product.flat_rate_price',
+                'product.discount',
+                'product.stock_qty',
+                'product.stock_mini_qty',
+                'product.free_shopping',
+                'product.vat_status',
+                'product.vat',
+                'product.shipping_days',
+                'product.brand',
+                'product.stock_qty',
+                'brands.name as brand_name',
+                'brands.slug as brand_slug',
+                'users.business_name as seller_name',
+                'users.business_name_slug as seller_slug'
+            )
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
             ->get();
+
         $products = [];
-        // dd($product_chk);
+
+        $warrantyCheck = product_warranty::where('product_id', $data['pro_row']->id)->get();
+
+        
+        // dd($warrantyCheck);
         // return false;
+
+
         foreach ($product_chk as $key => $v) {
+
+            $last_price = 0;
+
+            $vat = $v->vat ? $v->vat : '0';
+            $price = $v->price + ($v->price * $vat / 100);
+
+            $percent_discount = $price - ($price * $v->discount / 100);
+            $fixed_discount = $price - $v->discount;
+
+            if ($v->discount_status == 1) {
+                $last_price = $percent_discount;
+            } elseif ($v->discount_status == 2) {
+                $last_price = $fixed_discount;
+            } else {
+                $last_price = $price;
+            }
+
             $products[] = [
-                'id'                => $v->id,
-                'product_id'        => $v->product_id,
-                'product_name'      => $v->pro_name,
-                'discount'          => $v->discount,
-                'price'             => number_format($v->price, 2),
-                'thumnail_img'      => url($v->thumnail_img),
-                'pro_slug'          => $v->pro_slug,
-                'free_shopping'     => $v->free_shopping,
+                'id'                    => $v->id,
+                'product_id'            => $v->product_id,
+                'seller_id'             => $v->seller_id,
+                'product_name'          => $v->pro_name,
+                'discount'              => $v->discount,
+                'discount_status'       => $v->discount_status,
+                'price'                 => $v->price,
+                'thumnail_img'          => url($v->thumnail_img),
+                'pro_slug'              => $v->pro_slug,
+                'free_shopping'         => $v->free_shopping,
+                'flat_rate_price'       => $v->flat_rate_price,
+                'vat'                   => $v->vat,
+                'vat_status'            => $v->vat_status,
+                'shipping_days'         => $v->shipping_days,
+                'brand_name'            => $v->brand_name,
+                'brand_slug'            => $v->brand_slug,
+                'stock_qty'             => $v->stock_qty,
+                'last_price'            => $last_price,
 
             ];
         }
@@ -515,16 +703,16 @@ class UnauthenticatedController extends Controller
         $brand = Brands::where('id', $brand_id)->first();
         $formateBrand = [];
         $formateBrand[] = [
-            "id"        => !empty($brand->id)? $brand->id : '',
-            "name"      => !empty($brand->name)? $brand->name : '', 
-            "slug"      => !empty($brand->slug)? $brand->slug : '', 
+            "id"        => !empty($brand->id) ? $brand->id : '',
+            "name"      => !empty($brand->name) ? $brand->name : '',
+            "slug"      => !empty($brand->slug) ? $brand->slug : '',
             "image"     => !empty($brand->image) ? url($brand->image) : '',
-            "status"    => !empty($brand->status)? $brand->status : '',
+            "status"    => !empty($brand->status) ? $brand->status : '',
         ];
 
         // featc attribute 
-        $arrData            = ProductVarrientHistory::where('product_id',$findproductrow->id)->get();
-        $groupData          = ProductVarrientHistory::where('product_id',$findproductrow->id)->select('id','color')->groupBy('color')->get();
+        $arrData            = ProductVarrientHistory::where('product_id', $findproductrow->id)->get();
+        $groupData          = ProductVarrientHistory::where('product_id', $findproductrow->id)->select('id', 'color')->groupBy('color')->get();
         $formatedData = [];
         foreach ($arrData as $Key => $value) {
             $formatedData[] = [
@@ -545,7 +733,7 @@ class UnauthenticatedController extends Controller
                 'color'            => $value->color,
             ];
         }
-       
+
         $pdata['varient']    = $formatedData;
         $pdata['colorGroup'] = $gdata;
         // return response()->json($pdata);
@@ -553,8 +741,9 @@ class UnauthenticatedController extends Controller
         return response()->json([
             'data'      => $data,
             'brand'     => $formateBrand,
-            'seller'    => !empty($seller)? $seller:'',
+            'seller'    => !empty($seller) ? $seller : '',
             'attibute' => $pdata,
+            'warranty' => $warrantyCheck,
         ], 200);
     }
 
@@ -563,57 +752,89 @@ class UnauthenticatedController extends Controller
 
         $chkCategory   = Categorys::where('slug', $slug)->select('id', 'name')->first();
         // $pro['product_']  = ProductCategory::where('category_id', $chkCategory->id)->first();
-        $proCategorys  = ProductCategory::where('category_id', $chkCategory->id)
+        $proCategorys = ProductCategory::where('category_id', $chkCategory->id)
             ->select(
-                'product.id', 
-                'product.seller_id', 
-                'product.discount', 
-                'product.discount_status', 
-                'produc_categories.product_id', 
-                'product.name as pro_name', 
-                'produc_categories.category_id', 
-                'description', 
-                'short_description', 
-                'product.free_shopping', 
-                'price', 
+                'product.id',
+                'product.seller_id',
+                'product.discount',
+                'product.discount_status',
+                'produc_categories.product_id',
+                'product.name as pro_name',
+                'produc_categories.category_id',
+                'description',
+                'short_description',
+                'product.free_shopping',
+                'price',
+                'vat',
+                'product.brand',
                 'stock_qty',
-                'thumnail_img', 
-                'product.slug as pro_slug'
+                'thumnail_img',
+                'product.slug as pro_slug',
+                'users.business_name as seller_name',
+                'users.business_name_slug as seller_slug',
+                'brands.name as brand_name'
+            )
+            ->join('product', 'product.id', '=', 'produc_categories.product_id')
+            ->leftJoin('users', 'users.id', '=', 'product.seller_id')
+            ->leftJoin('brands', 'product.brand', '=', 'brands.id')
+            ->get();
 
-                )->join('product', 'product.id', '=', 'produc_categories.product_id')->get();
-
-                // dd($proCategorys);
-                // return false;
+        // dd($proCategorys);
+        // return false;
         $result = [];
         foreach ($proCategorys as $key => $v) {
-            $percentPrice = $v->price - ($v->price * $v->discount / 100);
-            $dis_price = $v->price - $v->discount;
+
+            $last_price = 0;
+            $vat = $v->vat ? $v->vat : '0';
+            $price = $v->price + ($v->price * $vat / 100);
+
+            $percent_discount = $price - ($price * $v->discount / 100);
+            $fixed_discount = $price - $v->discount;
+
+            if ($v->discount_status == 1) {
+                $last_price = $percent_discount;
+            } elseif ($v->discount_status == 2) {
+                $last_price = $fixed_discount;
+            } else {
+                $last_price = $price;
+            }
+
             $result[] = [
-                'id'           => $v->id,
-                'product_id'   => $v->product_id,
-                'product_name' => $v->pro_name,
-                'category_id'  => $v->category_id,
-                'discount'     => $v->discount,
-                'price'        => number_format($v->price, 2),
-                'percentPrice' => number_format($percentPrice, 2),
-                'dis_price'    => number_format($dis_price, 2),
-                'thumnail_img' => url($v->thumnail_img),
-                'pro_slug'     => $v->pro_slug,
-                'discount_status'     => $v->discount_status,
-                'free_shopping'     => $v->free_shopping,
-                'description'     => $v->description,
-                'short_description'     => $v->short_description,
-                'stock_qty'     => $v->stock_qty,
+                'id'                    => !empty($v->id) ? $v->id : '',
+                'product_id'            => !empty($v->product_id) ? $v->product_id : '',
+                'product_name'          => !empty($v->pro_name) ? $v->pro_name : '',
+                'category_id'           => !empty($v->category_id) ? $v->category_id : '',
+                'discount'              => !empty($v->discount) ? $v->discount : '',
+                'price'                 => $price,
+                'percent_discount'      => $percent_discount,
+                'fixed_discount'        => $fixed_discount,
+                'thumnail_img'          => !empty($v->thumnail_img) ? url($v->thumnail_img) : "",
+                'pro_slug'              => !empty($v->pro_slug) ? $v->pro_slug : "",
+                'discount_status'       => !empty($v->discount_status) ? $v->discount_status : "",
+                'free_shopping'         => !empty($v->free_shopping) ? $v->free_shopping : "",
+                'description'           => !empty($v->description) ? $v->description : "",
+                'short_description'     => !empty($v->short_description) ? $v->short_description : "",
+                'stock_qty'             => !empty($v->stock_qty) ? $v->stock_qty : "",
+                'stock_status'          => !empty($v->stock_status) ? $v->stock_status : "",
+                'shipping_days'         => !empty($v->shipping_days) ? $v->shipping_days : "",
+                'shipping_days'         => !empty($v->shipping_days) ? $v->shipping_days : "",
+                'vat_status'            => !empty($v->vat_status) ? $v->vat_status : "",
+                'vat'                   => !empty($v->vat) ? $v->vat : "",
+                'seller_name'           => !empty($v->seller_name) ? $v->seller_name : "",
+                'seller_slug'           => !empty($v->seller_slug) ? $v->seller_slug : "",
+                'brand_name'            => $v->brand_name,
+                'last_price'            => $last_price,
 
             ];
         }
+
+        // dd($brand_name);
+        // return false;
 
         $data['result']        = $result;
         $data['pro_count']     = count($result);
         $data['categoryname']  = $chkCategory->name;
 
-        // dd($product['pro_row']);
-        // return false;
         return response()->json($data, 200);
     }
     public function countrylist()
@@ -743,6 +964,68 @@ class UnauthenticatedController extends Controller
 
         ]);
     }
+    public function getcouponDiscount(request $request)
+    {
+        // dd($request->couponCode,$request->price,$request->user_id);
+        $validator = Validator::make($request->all(), [
+            'user_id'       => 'required',
+            'couponCode'    => 'required',
+            'price'         => 'required',
+        ], [
+            'user_id.required'      => 'User id is Invalid.',
+            'couponCode.required'   => 'Coupon code is Invalid.',
+            'price.required'        => 'Price is Invalid.',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        $couponCode = $request->couponCode;
+        $pro_price = $request->price;
+        $user_id = $request->user_id;
+
+        $coupon = coupons::where('promocode', $couponCode)->where('status', 1)->first();
+
+        if ($coupon) {
+            $usageCheck = CouponUseHistory::where('user_id', $user_id)->where('coupon_id', $coupon->id)->first();
+
+            if ($usageCheck) {
+                return response()->json(['errors' => ['coupon' => ['This coupon has already been used.']]], 422);
+            } else {
+                if ($pro_price >= $coupon->min_shopping) {
+                    $dis_value = 0;
+                    $last_price = 0;
+                    if ($coupon->code_type == 'percentage') {
+                        $last_price = $pro_price - ($pro_price * $coupon->d_percent / 100);
+                        $dis_value = $pro_price * $coupon->d_percent / 100;
+                    } else if ($coupon->code_type == 'fixed') {
+                        $last_price = $pro_price - $coupon->d_fvalue;
+                        $dis_value = $coupon->d_fvalue;
+                    }
+                    $couponData = [
+                        'id'                    => $coupon->id,
+                        'name'                  => $coupon->name,
+                        'PRICE'                 =>  $pro_price,
+                        'discount'              => $dis_value,
+                        'last_discount_price'   => $last_price,
+                        'promocode'             => $coupon->promocode,
+                        'code_type'             => $coupon->code_type,
+                        'min_shopping'          => $coupon->min_shopping,
+                        'd_percent'             => $coupon->d_percent,
+                        'd_fvalue'              => $coupon->d_fvalue,
+                        'status'                => $coupon->status,
+                        'user_id'               => $request->user_id,
+                    ];
+                    return response()->json(['coupon_data' => $couponData], 200);
+                } else {
+                    return response()->json(['errors' => ['coupon' => ['Please shop for a minimum amount.']]], 422);
+                }
+            }
+        } else {
+            return response()->json(['errors' => ['coupon' => ['Coupon not found.']]], 422);
+        }
+    }
     public function getbanner()
     {
 
@@ -788,23 +1071,87 @@ class UnauthenticatedController extends Controller
 
         $id = $getbrands->id;
 
-        $getProduct = Product::where("brand", $id)->where("status", 1)->get();
+        $getProduct = Product::where("brand", $id)
+
+            ->join('users', 'product.seller_id', '=', 'users.id')
+            ->get([
+                'product.id',
+                'product.seller_id',
+                'product.name',
+                'product.slug',
+                'product.description',
+                'product.short_description',
+                'product.brand',
+                'product.sku',
+                'product.price',
+                'product.unit',
+                'product.stock_qty',
+                'product.stock_mini_qty',
+                'product.stock_status',
+                'product.manufacturer',
+                'product.discount',
+                'product.discount_status',
+                'product.shipping_days',
+                'product.free_shopping',
+                'product.flat_rate_status',
+                'product.flat_rate_price',
+                'product.vat',
+                'product.vat_status',
+                'product.tax',
+                'product.tax_status',
+                'product.thumnail_img',
+                'users.business_name as seller_name',
+                'users.business_name_slug as seller_slug'
+            ]);
+
 
         $products = [];
         foreach ($getProduct as $v) {
-            $products[] = [
+            $last_price = 0;
+            $vat = $v->vat ? $v->vat : '0';
+            $price = $v->price + ($v->price * $vat / 100);
 
+
+            $percent_discount = $v->price - ($price * $v->discount / 100);
+            $fixed_discount = $price - $v->discount;
+
+            if ($v->discount_status == 1) {
+                $last_price = $percent_discount;
+            } elseif ($v->discount_status == 2) {
+                $last_price = $fixed_discount;
+            } else {
+                $last_price = $v->price;
+            }
+
+            $products[] = [
                 'id'                => $v->id,
+                'seller_id'         => $v->seller_id,
                 'name'              => $v->name,
-                'product_name'              => $v->name,
+                'product_name'      => $v->name,
                 'slug'              => $v->slug,
+                'pro_slug'              => $v->slug,
                 'image'             => url($v->thumnail_img),
-                'thumnail_img'             => url($v->thumnail_img),
+                'thumnail_img'      => url($v->thumnail_img),
                 'business_name'     => $v->business_name,
-                'price'             => $v->price,
+                'price'             => $price,
                 'discount'          => $v->discount,
                 'stock_quantity'    => $v->stock_qty,
                 'mini_quantity'     => $v->stock_mini_qty,
+
+
+                'discount_status'   => !empty($v->discount_status) ? $v->discount_status : "",
+                'shipping_days'     => !empty($v->shipping_days) ? $v->shipping_days : "",
+                'free_shopping'     => !empty($v->free_shopping) ? $v->free_shopping : "",
+                'flat_rate_status'  => !empty($v->flat_rate_status) ? $v->flat_rate_status : "",
+                'flat_rate_price'   => !empty($v->flat_rate_price) ? $v->flat_rate_price : "",
+
+                'seller_name'       => !empty($v->seller_name) ? $v->seller_name : '',
+                'seller_slug'       => !empty($v->seller_slug) ? $v->seller_slug : '',
+                'percent_discount'  => $percent_discount,
+                'fixed_discount'    => $fixed_discount,
+                'last_price'        => $last_price,
+                'stock_qty'         => $v->stock_qty,
+                'stock_status'      => $v->stock_status,
 
             ];
         }
@@ -843,17 +1190,56 @@ class UnauthenticatedController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    public function checkAttribueDetails(Request $request){
+    public function checkAttribueDetails(Request $request)
+    {
 
         try {
             $data['attribute'] = ProductVarrientHistory::where('color', $request->color)
                 ->where('product_id', $request->product_id)
                 ->get();
-            return response()->json($data);
+            $variantData = $data['attribute'];
+            $formatedData = [];
+            foreach ($variantData as $Key => $value) {
+                $formatedData[] = [
+                    'id'               => $value->id,
+                    'color'            => $value->color,
+                    'size'             => $value->size,
+                    'sku'              => $value->sku,
+                    'qty'              => $value->qty,
+                    'rprice'            => number_format($value->price, 2),
+                    'price'            => $value->price,
+                    'image'            => !empty($value->image) ? url($value->image) : "",
+                    'product_id'       => $value->product_id,
+                ];
+            }
+            return response()->json($formatedData);
         } catch (QueryException $e) {
             // Handle query exception
             return response()->json(['error' => 'Query exception occurred'], 500);
         }
+    }
+    public function search(Request $request)
+    {
+        $searchTerm = $request->input('term');
+        $categoryResults = Categorys::where('name', 'like', '%' . $searchTerm . '%')
+            ->take(20) // Limit the number of category results to 10
+            ->pluck('name', 'slug')
+            ->map(function ($name, $slug) {
+                return ['label' => Str::limit($name, 100), 'catslug' => $slug, 'type' => 'category'];
+            });
 
+        $productResults = Product::join('produc_categories', 'product.id', '=', 'produc_categories.product_id')
+            ->join('categorys', 'produc_categories.category_id', '=', 'categorys.id')
+            ->where('product.name', 'like', '%' . $searchTerm . '%')
+            ->orWhere('categorys.name', 'like', '%' . $searchTerm . '%')
+            ->take(20) // Limit the number of product results to 10
+            ->pluck('product.name', 'product.slug')
+            ->map(function ($name, $slug) {
+                return ['label' => Str::limit($name, 80), 'slug' => $slug, 'type' => 'product'];
+            });
+        // Merge and limit the results
+        $mergedResults = $categoryResults->concat($productResults)->take(10);
+
+        return response()->json($mergedResults);
     }
 }

@@ -96,11 +96,11 @@
                                         </td>
                                         <td class="text-center">
                                             <span v-if="(item.home_status == 1)"> <span
-                                                    class="badge bg-success">Active</span> </span>
-                                            <span v-else> <span class="badge bg-danger">Inactive</span> </span>
+                                                    class="badge bg-success-light">Active</span> </span>
+                                            <span v-else> <span class="badge bg-danger-light">Inactive</span> </span>
                                         </td>
                                         <td class="text-center">
-                                            <nuxt-link :to="`/seller/edit/${item.id}`" variant="warning" size="sm">
+                                            <nuxt-link :to="`/seller/edit/${item.id}`" class="btn btn-warning bg-history-light" variant="warning" size="sm">
                                                 <i class="bx bx-edit"></i> EDIT
                                             </nuxt-link>
 

@@ -6,6 +6,7 @@ You can directly use them in pages and other components without the need to impo
 
 **Tip:** If a component is conditionally rendered with `v-if` and is big, it is better to use `Lazy` or `lazy-` prefix to lazy load.
 
+- `<AddNewCard>` | `<add-new-card>` (components/addNewCard.vue)
 - `<BestPrice>` | `<best-price>` (components/BestPrice.vue)
 - `<BrandiOfficialStore>` | `<brandi-official-store>` (components/BrandiOfficialStore.vue)
 - `<BrandProductGrid>` | `<brand-product-grid>` (components/brandProductGrid.vue)
@@ -18,6 +19,7 @@ You can directly use them in pages and other components without the need to impo
 - `<CategoryProductFilterGrid>` | `<category-product-filter-grid>` (components/CategoryProductFilterGrid.vue)
 - `<CategoryRecentView>` | `<category-recent-view>` (components/CategoryRecentView.vue)
 - `<CategorySliders>` | `<category-sliders>` (components/CategorySliders.vue)
+- `<CategorySlidersTest>` | `<category-sliders-test>` (components/CategorySlidersTest.vue)
 - `<CategoryThree>` | `<category-three>` (components/CategoryThree.vue)
 - `<CategoryTwo>` | `<category-two>` (components/CategoryTwo.vue)
 - `<CommonMiniTabNavbar>` | `<common-mini-tab-navbar>` (components/Common_MiniTabNavbar.vue)
@@ -30,10 +32,12 @@ You can directly use them in pages and other components without the need to impo
 - `<FlashSelling>` | `<flash-selling>` (components/FlashSelling.vue)
 - `<Footer>` | `<footer>` (components/Footer.vue)
 - `<LimitedStokDetails>` | `<limited-stok-details>` (components/LimitedStokDetails.vue)
+- `<LoginCartpage>` | `<login-cartpage>` (components/loginCartpage.vue)
 - `<LoginPopup>` | `<login-popup>` (components/LoginPopup.vue)
 - `<LogoAndPayment>` | `<logo-and-payment>` (components/LogoAndPayment.vue)
 - `<MoreCollection>` | `<more-collection>` (components/MoreCollection.vue)
 - `<Navbar>` | `<navbar>` (components/Navbar.vue)
+- `<NavbarSecond>` | `<navbar-second>` (components/navbarSecond.vue)
 - `<NavSlider>` | `<nav-slider>` (components/NavSlider.vue)
 - `<OfficalStore>` | `<offical-store>` (components/OfficalStore.vue)
 - `<OfficialStoreDeals>` | `<official-store-deals>` (components/OfficialStoreDeals.vue)
@@ -50,5 +54,6 @@ You can directly use them in pages and other components without the need to impo
 - `<TopDeals>` | `<top-deals>` (components/TopDeals.vue)
 - `<TopSellingItem>` | `<top-selling-item>` (components/TopSellingItem.vue)
 - `<TopSellingItemBackup>` | `<top-selling-item-backup>` (components/TopSellingItemBackup.vue)
+- `<TopSellingItemCopy>` | `<top-selling-item-copy>` (components/TopSellingItem_copy.vue)
 - `<Tutorial>` | `<tutorial>` (components/Tutorial.vue)
 - `<UserSidebar>` | `<user-sidebar>` (components/userSidebar.vue)

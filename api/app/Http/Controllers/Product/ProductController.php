@@ -22,6 +22,7 @@ use App\Models\ProductVarrient;
 use App\Models\AttributeValues;
 use App\Models\Attribute as Attr;
 use App\Models\OrderHistory;
+use App\Models\product_warranty;
 use Illuminate\Support\Str;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Rules\MatchOldPassword;
@@ -146,7 +147,9 @@ class ProductController extends Controller
 
     public function save(Request $request)
     {
-        //dd($request->all());
+
+        // dd($formattedData);
+        // return false;
         $validator = Validator::make($request->all(), [
             'name'           => 'required',
             'category'       => 'required',
@@ -255,7 +258,7 @@ class ProductController extends Controller
             //update
         }
     }
-    
+
     function generateUnique4DigitNumber($existingNumbers = [])
     {
         do {
@@ -265,12 +268,12 @@ class ProductController extends Controller
         return $uniqueNumber;
     }
 
-    
+
     public function getVarientHistory(Request $request)
     {
         $product_id         = $request->product_id;
-        $arrData            = ProductVarrientHistory::where('product_id',$product_id)->get();
-        $groupData          = ProductVarrientHistory::where('product_id',$product_id)->select('id','color')->groupBy('color')->get();
+        $arrData            = ProductVarrientHistory::where('product_id', $product_id)->get();
+        $groupData          = ProductVarrientHistory::where('product_id', $product_id)->select('id', 'color')->groupBy('color')->get();
         $formatedData = [];
         foreach ($arrData as $Key => $value) {
             $formatedData[] = [
@@ -291,11 +294,11 @@ class ProductController extends Controller
                 'color'            => $value->color,
             ];
         }
-       
+
         $pdata['varient']    = $formatedData;
         $pdata['colorGroup'] = $gdata;
         return response()->json($pdata);
-    }    
+    }
     public function deleteValrient(Request $request)
     {
 
@@ -368,14 +371,23 @@ class ProductController extends Controller
 
     public function getProductList()
     {
-        $data = Product::orderBy('id', 'desc')->get();
+        $data = Product::orderBy('product.id', 'desc')
+            ->leftJoin('brands', 'brands.id', '=', 'product.brand')  // Corrected foreign key assumption
+            ->select('product.*', 'brands.name AS brand_name')  // Select all product columns and brand name with alias
+            ->get();
+
+
         $collection = collect($data);
         $modifiedCollection = $collection->map(function ($item) {
             return [
-                'id'        => $item['id'],
-                'name'      => substr($item['name'], 0, 20),
-                'stock_qty' => $item['stock_qty'],
-                'status'    => $item['status'],
+                'id'            => $item['id'],
+                'name'          => substr($item['name'], 0, 20),
+                'stock_qty'     => $item['stock_qty'],
+                'status'        => $item['status'],
+                'sku'           => $item['sku'],
+                'thumnail_img'  => url($item['thumnail_img']),
+                'brand'         => $item['brand'],
+                'brand_name'    => $item['brand_name'],
 
             ];
         });
@@ -417,7 +429,7 @@ class ProductController extends Controller
         $orders = $query->paginate($perPage, ['*'], 'page', $page);
 
         $modifiedCollection = $orders->getCollection()->map(function ($item) {
-        $statusCheck =  OrderStatus::where('id', $item->order_status)->first();
+            $statusCheck =  OrderStatus::where('id', $item->order_status)->first();
 
             return [
                 'order_id'    => $item->order_id,
@@ -506,6 +518,21 @@ class ProductController extends Controller
 
     public function insertVarient(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|array',
+            'id.*' => 'required',
+            'sku' => 'required|array',
+            'sku.*' => 'required',
+            'qty' => 'required|array',
+            'qty.*' => 'required|numeric',
+            'price' => 'required|array',
+            'price.*' => 'required|numeric',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust file validation as needed
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
         $data = [
             'id' => $request->id,
@@ -517,7 +544,7 @@ class ProductController extends Controller
         ];
         // dd($data);
         // return false;
-        
+
         if (
             isset($request->id) && is_array($request->id) &&
             isset($request->sku) && is_array($request->sku) &&
@@ -531,42 +558,43 @@ class ProductController extends Controller
 
             //  dd($request->all());
             // Loop through the arrays and update records
-        foreach ($request->id as $index => $id) {
-            // Check if SKU, Qty, and Price are not null or empty
-            if (
-                !empty($request->sku[$index]) && !empty($request->qty[$index]) && !empty($request->price[$index]) &&
-                $request->hasFile('images.' . $index)
-            ) {
-                // Update records based on $id
+            foreach ($request->id as $index => $id) {
+                // Check if SKU, Qty, and Price are not null or empty
+                if (
+                    !empty($request->sku[$index]) && !empty($request->qty[$index]) && !empty($request->price[$index]) &&
+                    $request->hasFile('images.' . $index)
+                ) {
+                    // Update records based on $id
 
-                $image = $request->file('images.' . $index); // Retrieve the image file
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Generate unique image name
-                $image->move(public_path('/backend/files/'), $imageName); // Move image to storage
+                    $image = $request->file('images.' . $index); // Retrieve the image file
+                    $imageName = time() . '_' . $image->getClientOriginalName(); // Generate unique image name
+                    $image->move(public_path('/backend/files/'), $imageName); // Move image to storage
 
-                ProductVarrientHistory::where('id', $id)->update([
-                    'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
-                    'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
-                    'price' => !empty($request->price[$index]) ? $request->price[$index] : "", //$request->qty[$index],//$request->price[$index]
-                    'image' => '/backend/files/' . $imageName // Store image path
-                ]);
-            }else if (
-                !empty($request->sku[$index]) && !empty($request->qty[$index]) && !empty($request->price[$index])
-            ) {
+                    ProductVarrientHistory::where('id', $id)->update([
+                        'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
+                        'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
+                        'price' => !empty($request->price[$index]) ? $request->price[$index] : "", //$request->qty[$index],//$request->price[$index]
+                        'image' => '/backend/files/' . $imageName // Store image path
+                    ]);
+                } else if (
+                    !empty($request->sku[$index]) && !empty($request->qty[$index]) && !empty($request->price[$index])
+                ) {
 
-                ProductVarrientHistory::where('id', $id)->update([
-                    'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
-                    'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
-                    'price' => !empty($request->price[$index]) ? $request->price[$index] : "", 
-                ]);
+                    ProductVarrientHistory::where('id', $id)->update([
+                        'sku'   => !empty($request->sku[$index]) ? $request->sku[$index] : "",
+                        'qty'   => !empty($request->qty[$index]) ? $request->qty[$index] : "", //$request->qty[$index],
+                        'price' => !empty($request->price[$index]) ? $request->price[$index] : "",
+                    ]);
+                }
             }
-        }
         }
 
         return response()->json(['message' => 'Data updated successfully'], 200);
     }
 
 
-    public function checkAttribue(Request $request){
+    public function checkAttribue(Request $request)
+    {
 
         try {
             $data['attribute'] = ProductVarrientHistory::where('color', $request->color)
@@ -577,7 +605,6 @@ class ProductController extends Controller
             // Handle query exception
             return response()->json(['error' => 'Query exception occurred'], 500);
         }
-
     }
 
     public function varientList($product_id)
@@ -647,5 +674,53 @@ class ProductController extends Controller
         // Return combinations as JSON response
         return response()->json($pdata);
     }
-    
+    public function addWarranty(Request $request)
+    {
+        // dd($request->all());
+        // return false;
+
+        $product_id = $request->product_id;
+
+        $warrantyData = $request->input('warranty');
+
+        // $formattedData = [];
+
+        foreach ($warrantyData as $item) {
+            $formattedItem = [
+                'product_id' => $product_id,
+                'warranty_name' => $item['warranty'],
+                'days' => $item['days'],
+                'price' => $item['price']
+            ];
+            product_warranty::create($formattedItem);
+        }
+
+        return response()->json(['msg' => 'add succfully', 200]);
+    }
+    public function getaddWarranty(Request $request, int $id)
+    {
+        // dd($id);
+
+        $getData = product_warranty::where('product_id', $id)->get();
+        // dd($getData);
+        return response()->json($getData);
+    }
+    public function deletewarranty(Request $request, $id)
+    {
+        try {
+            
+            $warranty = product_warranty::find($id);
+            if ($warranty) {                
+                $warranty->delete();
+                
+                return response()->json(['message' => 'Warranty deleted successfully'], 200);
+            } else {
+                
+                return response()->json(['message' => 'Warranty not found'], 404);
+            }
+        } catch (\Exception $e) {
+            
+            return response()->json(['message' => 'Failed to delete warranty', 'error' => $e->getMessage()], 500);
+        }
+    }
 }

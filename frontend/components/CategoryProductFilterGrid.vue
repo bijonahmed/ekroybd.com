@@ -185,28 +185,31 @@
                                     <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-6" v-for="item in prouducts"
                                         :key="item.id">
                                         <div class="product_grid" v-if="prouducts.length > 0">
-                                            <nuxt-link :to="`/product-details/${item.pro_slug}`"
-                                                v-if="prouducts.length > 0">
+                                            <nuxt-link :to="`/product-details/${item.pro_slug}`">
                                                 <img :src="item.thumnail_img" class="img-fluid" loading="lazy">
                                             </Nuxt-link>
                                             <span v-if="item.free_shopping == 1">Free Delivery</span>
-                                            <!-- <strong>Official Store </strong> -->
+                                            <strong v-if="item.seller_name">{{ item.seller_name }}</strong>
+                                            <strong v-else>Admin Seller</strong>
                                             <h1 class="mt-1">{{ item.product_name }}</h1>
-                                            
-                                            <div  v-if="someValue !== null">
+
+                                            <div>
                                                 <div class="d-flex align-items-center" v-if="item.discount_status == 1">
-                                                    <!-- <p class="me-1" v-if="item.discount !== 0">${{ (price = item.price - (item.price * item.discount / 100)).toFixed(2) }}</p> -->
-                                                    <p class="me-1" v-if="item.discount !== 0">${{ item.percentPrice }}</p>
-                                                    <p v-else class="me-1">${{ item.price }}</p>
-                                                    <p v-if="item.discount !== 0"><strike>${{ item.price }}</strike> <span>{{ item.discount }}%</span></p>
-                                                </div>                                            
-                                                <div class="d-flex align-items-center" v-else-if="item.discount_status == 2">
-                                                    <!-- <p v-if="item.discount !== 0" class="me-1">${{ (item.price - item.discount).toFixed(2) }}</p> -->
-                                                    <p class="me-1" v-if="item.discount !== 0">${{ item.dis_price }}</p>
-                                                    <p v-else  class="me-1">${{ item.price }}</p>
-                                                    <p  v-if="item.discount !== 0"><strike>${{ item.price }}</strike> <span>${{ item.discount }}</span></p>
-                                                </div>                                            
-                                                <p v-else>${{ item.price }}</p>
+                                                    <p class="me-1" v-if="item.discount !== 0">${{
+                    item.percent_discount.toFixed(2) }}</p>
+                                                    <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
+                                                    <p v-if="item.discount !== 0  && item.discount !== ''"><strike>${{ item.price }}</strike>
+                                                        <span>{{ item.discount }}%</span></p>
+                                                </div>
+                                                <div class="d-flex align-items-center"
+                                                    v-else-if="item.discount_status == 2">
+                                                    <p class="me-1" v-if="item.discount !== 0">${{
+                    item.fixed_discount.toFixed(2) }}</p>
+                                                    <p v-else class="me-1">${{ (item.price).toFixed(2) }}</p>
+                                                    <p v-if="item.discount !== 0 && item.discount !== ''"><strike>${{ item.price }}</strike>
+                                                        <span>${{ item.discount }}</span></p>
+                                                </div>
+                                                <p v-else>${{ (item.price).toFixed(2) }}</p>
                                             </div>
 
 
@@ -222,9 +225,10 @@
                                                 </div>
                                                 <h6>(200)</h6>
                                             </div>
-                                            <button v-if="item.stock_qty >= 1" type="button" class="btn_cart" @click="addToCart(item.id)">Add to
+                                            <button v-if="item.stock_qty >= 1" type="button" class="btn_cart"
+                                                @click="addToCart(item.id)">Add to
                                                 cart </button>
-                                            <button v-else  type="button" class="btn_sold">SoldOut</button>
+                                            <button v-else type="button" class="btn_sold">SoldOut</button>
                                         </div>
                                     </div>
                                     <!-- ================= Loop ===================  -->
@@ -290,11 +294,26 @@ export default {
             const existingItem = this.cart.find((item) => item.product.id === productId);
 
             if (existingItem) {
-                //existingItem.quantity += 1;
+                existingItem.quantity += 1;
             } else {
                 this.cart.push({
                     product: productToAdd,
                     quantity: 1
+                });
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Product successfully Added to cart"
                 });
             }
 
@@ -333,21 +352,19 @@ export default {
 
         },
         calculateSubtotal() {
-            let subtotal = 0;
-            this.cart.forEach((item) => {
-                const product = item.product;
-                console.log(`Quantity: ${item.quantity}, Price: ${product.price}`);
-                const priceAsNumber = parseFloat(product.price.replace(/[^\d.]/g, '')); //510;//product.price;
-                if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
-                    subtotal += item.quantity * priceAsNumber;
-                } else {
-                    console.error('Invalid quantity or price:', item.quantity, product.price);
-                }
-                // console.log(`Intermediate Subtotal: ${subtotal}`);
-            });
-            //console.log(`Final Subtotal: ${subtotal}`);
-            return this.subtotal = subtotal;
-            //return subtotal;
+            // let subtotal = 0;
+            // this.cart.forEach((item) => {
+            //     const product = item.product;
+            //     console.log(`Quantity: ${item.quantity}, Price: ${product.last_price}`);
+            //     const priceAsNumber = parseFloat(product.last_price.replace(/[^\d.]/g, '')); //510;//product.price;
+            //     if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
+            //         subtotal += item.quantity * priceAsNumber;
+            //     } else {
+            //         console.error('Invalid quantity or price:', item.quantity, product.last_price);
+            //     }
+            // });
+            // return this.subtotal = subtotal;
+            return 0;
         },
         categoryGrid() {
             const slug = this.$route.query.slug;
@@ -374,7 +391,7 @@ export default {
                 this.prouducts = response.data.result;
                 this.pro_count = response.data.pro_count;
                 this.categoryname = response.data.categoryname;
-                console.log(response.data.result);
+
 
             })
                 .catch(error => {

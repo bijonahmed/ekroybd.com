@@ -2,56 +2,9 @@
     <div>
         <LogoAndPayment />
         <!-- navbar section start here  -->
-        <section class="search_bar">
-            <div class="container">
-                <div class="row justify-content-between align-items-center">
-                    <div class="col-lg-3 col-md-4 col-4">
-                        <div class="logo nav_tab">
-                            <!-- mobile view sidebar  -->
-                            <button type="button" class="btn_menu mobile_view" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasExample" aria-controls="offcanvasExample"><i
-                                    class="fa-solid fa-bars-staggered"></i></button>
-                            <!-- sidebar offcanvas  -->
-                            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample"
-                                aria-labelledby="offcanvasExampleLabel">
-                                <div class="offcanvas-header">
-                                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                                        aria-label="Close"></button>
-                                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Ecommerce</h5>
-                                </div>
-                                <div class="offcanvas-body">
-                                    <!-- offf canvas start here  -->
-                                    <Common_MobileSidebar />
-                                </div>
-                            </div>
-                            <!-- mini tab view navbar here  -->
-                            <Common_MiniTabNavbar />
-                            <!-- nav end  -->
-                            <Nuxt-link to="/">Ecommerce <i class=" fa-regular fa-star"></i></Nuxt-link>
-                        </div>
-                    </div>
-                    <div class="col-6 desktop_view mini_tab_hide">
-                        <form action="" class="">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" name="" id="" placeholder="Search Product" class="form-control"> <button
-                                type="button">Search</button>
-                        </form>
-                    </div>
-                    <!-- desktop_view options  -->
-                    <DesktopViewOption />
-                    <!-- mobile view options  -->
-                    <div class="col-4 ms-auto  mobile_view">
-                        <div class="mobile_nav_option">
-                            <a class="search_form"><i class="fa-solid fa-magnifying-glass"></i></a>
-                        </div>
-                    </div>
-                    <!-- search modal  -->
-                    <Common_MobileSearchProduct />
-                </div>
-            </div>
-        </section>
+        <navbarSecond />
         <!-- Main section start here  -->
-        <section class="main_content ">
+        <section class="main_content " style="min-height: 50vh;">
             <div class="container">
                 <div class="row">
                     <div class="col-xl-8 col-lg-8 col-md-12">
@@ -67,6 +20,7 @@
                                 </div>
                             </div>
                             <div class="card_porduct">
+                                <!-- {{ cart }} -->
                                 <ul>
                                     <li v-for="item in cart" :key="item.product.id">
                                         <div class="row">
@@ -74,19 +28,44 @@
                                                 <div class="img_title">
                                                     <img :src="item.product.thumnail_img" class="img-fluid" alt="">
                                                     <div>
-                                                        <h1>
-                                                            <Nuxt-Link to="/product-details">{{
+                                                        <h1 class="mb-0">
+                                                            <Nuxt-Link
+                                                                :to="`/product-details/${item.product.pro_slug}`">{{
                             item.product.product_name }}</Nuxt-Link>
                                                         </h1>
-                                                        <p>Seller: Ecommerce</p>
-                                                        <span>In stock </span>
+                                                        <p class="m-0" v-if="item.product.seller_name">Seller:
+                                                            <nuxt-link style="color: #900c3f;"
+                                                                :to="`/business/${item.product.seller_slug}`">{{
+                            item.product.seller_name }}</nuxt-link>
+                                                        </p>
+                                                        <p class="m-0" v-else>Seller: Ecommerce</p>
+                                                        <p class="m-0" v-if="item.product.warranty_id">Warranty:
+                                                            {{ item.product.warranty_name }}</p>
+                                                        <span class="mt-0 text-success d-block"
+                                                            v-if="item.product.stock_qty >= 1">In stock </span>
+                                                        <span class="mt-0 text-danger  d-block" v-else>Out of stock
+                                                        </span>
+                                                        <p class="mt-0 "
+                                                            v-if="item.product.flat_rate_price !== 0 && item.product.free_shopping == 0">
+                                                            Delivery Charge ${{ item.product.flat_rate_price }}</p>
+                                                        <p class="mt-0 freeBadge" style=""
+                                                            v-else-if="item.product.freeshopping == 1">Free Shipping</p>
+                                                        <p class="mt-0 freeBadge" style="" v-else>Free Shipping</p>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-4">
                                                 <div class="cart_price">
-                                                    <small>(Qty: {{ item.quantity }})</small> x <strong>${{
-                            item.product.price }}</strong>
+                                                    <small>(Qty: {{ item.quantity }})</small> x
+                                                    <strong>${{ parseFloat(item.product.last_price).toFixed(2)
+                                                        }}</strong>
+                                                    <strong class="d-block" style="color:#adadad;">Was:<del>${{
+                            parseFloat(item.product.price).toFixed(2) }}</del></strong>
+                                                    <span style="font-size: 14px;"
+                                                        v-if="item.product.warranty_id">Warranty: ${{
+                            item.product.warrantyamt.toFixed(2) }}</span>
+
+
                                                 </div>
                                             </div>
                                         </div>
@@ -98,30 +77,33 @@
                                             </div>
                                             <div>
                                                 <div class="number">
-                                                    <!-- <span class="minus" @click="decrement">-</span> -->
-                                                    <input v-model="item.quantity" class="quantity"
-                                                        type="number" @keypress="allowOnlyNumbers" />
-                                                    <!-- <span class="plus" @click="increment">+</span> -->
+                                                    <input v-model="item.quantity" :max="item.product.stock_qty"
+                                                        @change="checkqty(item.product.stock_qty, item.quantity)"
+                                                        class="quantity" type="number" @keypress="allowOnlyNumbers" />
                                                 </div>
                                                 <Button class="btn_cart mt-2"
+                                                    :disabled="item.quantity >= item.product.stock_qty"
                                                     style="visibility: unset; background-color: #0C356A;"
                                                     @click="updateQuantity(item.product.id, item.quantity)">Update</Button>
+
                                             </div>
                                         </div>
                                     </li>
-
                                 </ul>
 
-                                <div v-if="itemCount !== 0">
+                                <div class="d-flex justify-content-between align-item-center mt-3">
+                                    <nuxt-link class="btn btn_edit" style="width: fit-content;" to="/">Continue
+                                        Shopping</nuxt-link>
 
-                                    <Button class="btn_cart mt-2" style="visibility: unset; background-color: #0C356A;"
-                                        @click="clearCart()">Clear Cart</Button>
+                                    <button class="btn_cart " style="width: fit-content;" v-if="itemCount !== 0"
+                                        @click="clearCart()">Clear Cart</button>
                                 </div>
 
                             </div>
 
                         </div>
-                        <div class="cart d-flex justify-content-center align-items-center" style="min-height: 95%;" v-else>
+                        <div class="cart d-flex justify-content-center align-items-center" style="min-height: 95%;"
+                            v-else>
                             <div class="blank_data text-center">
                                 <i class="fa-solid fa-triangle-exclamation"></i>
                                 <p>No Data</p>
@@ -137,19 +119,19 @@
                             </div>
                             <div class="d-flex justify-content-between">
                                 <h3>Subtotal</h3>
-                                <h2>${{ subtotal }}</h2>
+                                <h2>${{ subtotal.toFixed(2) }}</h2>
                             </div>
                             <p>Delivery fees not included yet.</p>
 
                             <span v-if="loggedIn">
                                 <a class="btn_cart"
                                     style="visibility: unset;width: 100%; display: block;text-align: center;"
-                                    @click="gotoCheckOut">CheckOut (${{ subtotal }})</a>
+                                    @click="gotoCheckOut">CheckOut (${{ subtotal.toFixed(2) }})</a>
                             </span>
                             <span v-else>
                                 <a class="btn_cart"
                                     style="visibility: unset;width: 100%; display: block;text-align: center;"
-                                    @click="openLoginModal">CheckOut (${{ subtotal }})</a>
+                                    @click="openLoginModal">CheckOut (${{ subtotal.toFixed(2) }})</a>
                             </span>
 
                         </div>
@@ -172,54 +154,7 @@
             <a href="#top"><i class="fa-solid fa-angle-up"></i></a>
         </div>
         <Footer />
-        <!-- login popup  -->
-        <div class="login_popup">
-            <div class="popup_box_modal">
-                <div>
-                    <div class="row">
-                        <div class="col-6 ms-auto text-end"> <button class="btn_edit close_login"><i
-                                    class="fa-solid fa-x"></i></button></div>
-                    </div>
-                </div>
-                <div class="popup_title">
-                    <h1>Login</h1>
-                    <p>Login and get access to all the features</p>
-                </div>
-                <div>
-                    <center><span class="show_error text-danger"></span></center>
-                    <form @submit.prevent="customerLogin()" id="formrest" class="forms-sample"
-                        enctype="multipart/form-data">
-                        <div class="input_group">
-                            <!-- <label for="">User Name </label> -->
-                            <span class="text-danger" v-if="errors.email">{{ errors.email[0] }}</span>
-                            <input type="text" placeholder="Email" v-model="login.email">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <div class="input_group">
-                            <span class="text-danger" v-if="errors.password">{{ errors.password[0] }}</span>
-                            <input type="password" placeholder="Password" v-model="login.password">
-                            <i class="toggle-password fa-solid fa-eye"></i>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center d-none">
-                            <div class="d-flex align-items-center">
-                                <input type="checkbox" id="remeber"><label for="remeber">Remember me</label>
-                            </div>
-                            <a href="#">Forget Password</a>
-                            <!-- <a href="forget-password.html">Forget Password</a> -->
-                        </div>
-                        <div>
-                            <button class="btn_logins" type="submit">Login</button>
-                        </div>
-                        <div class="d-flex">
-                            <p style="font-size: 12px !important;">Don't have Account? <nuxt-link to="/login"
-                                    class="btn_signup " type="button">SignUp</nuxt-link>
-                            </p>
-                        </div>
-                    </form>
-                </div>
-
-            </div>
-        </div>
+        <login_popup />
 
     </div>
 </template>
@@ -230,16 +165,22 @@ import Common_MobileSidebar from '~/components/Common_MobileSidebar.vue';
 import Common_MiniTabNavbar from '~/components/Common_MiniTabNavbar.vue';
 import Common_MobileSearchProduct from '~/components/Common_MobileSearchProduct.vue';
 import RecentView from '~/components/RecentView.vue';
+import navbarSecond from '../components/navbarSecond.vue';
+import login_popup from '~/components/loginCartpage.vue';
+
 export default {
     components: {
+        login_popup,
         Common_MobileSidebar,
         Common_MiniTabNavbar,
         Common_MobileSearchProduct,
-        RecentView
+        RecentView,
+        navbarSecond
     },
     data() {
         return {
             loading: false,
+            qty_limite: '',
             cart: [],
             //    product:[],
             itemCount: 0,
@@ -249,9 +190,13 @@ export default {
                 email: '',
                 password: '',
             },
+            item: {
+                quantity: '',
+            },
             notifmsg: '',
             errors: {},
             // loggedIn: false,
+            finalPrice: '',
 
         };
     },
@@ -262,7 +207,6 @@ export default {
 
         if (process.client) {
 
-            this.calculateSubtotal();
             this.loadCart();
             this.cartItemCount();
             this.subtotal = this.calculateSubtotal();
@@ -277,6 +221,8 @@ export default {
             })
             // Now you can work with myElement
         }
+        
+        this.calculateSubtotal();
     },
     computed: {
         loggedIn() {
@@ -285,6 +231,29 @@ export default {
 
     },
     methods: {
+        checkqty(sqty, s_qty) {
+            const qty = sqty;
+            const upqty = s_qty;
+            if (upqty >= qty) {
+                // Show a toast message
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "error",
+                    title: "You've reached the stock limit"
+                });
+            }
+        },
+
         gotoCheckOut() {
             this.$router.push('/checkout');
         },
@@ -307,8 +276,8 @@ export default {
                 this.$router.push('/checkout');
                 //this.loginForm.reset();
             } catch (err) {
-                console.log(err)
-                console.error('Login error:', err);
+                // console.log(err)
+                // console.error('Login error:', err);
                 if (err.response && err.response.status === 401) {
                     $(".show_error").html("Invalid credentials. Please try again.");
                 } else {
@@ -317,7 +286,7 @@ export default {
             }
         },
         openLoginModal() {
-            $(".login_popup").fadeIn();
+            $(".login_popup_two").fadeIn();
         },
         allowOnlyNumbers(event) {
             var charCode = (event.which) ? event.which : event.keyCode;
@@ -342,11 +311,27 @@ export default {
             const index = this.cart.findIndex((item) => item.product.id === productId);
             if (index !== -1) {
                 this.cart[index].quantity = newQuantity;
+                this.updateQuantity = newQuantity;
                 this.saveCart();
                 this.calculateSubtotal(); // Optionally recalculate subtotal after updating quantity
                 setTimeout(() => {
                     this.loading = false;
                 }, 2000);
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.onmouseenter = Swal.stopTimer;
+                        toast.onmouseleave = Swal.resumeTimer;
+                    }
+                });
+                Toast.fire({
+                    icon: "success",
+                    title: "Successfull update quantity"
+                });
 
             }
 
@@ -357,7 +342,7 @@ export default {
 
             if (savedCart) {
                 this.cart = JSON.parse(savedCart);
-                
+
             }
 
             let itemCount = 0;
@@ -373,7 +358,7 @@ export default {
         },
         handleCartItemCountUpdated(itemCount) {
             // This method will be called when the event is emitted from ComponentA
-            console.log('Received  DesktopViewOptions Com.:', itemCount);
+            // console.log('Received  DesktopViewOptions Com.:', itemCount);
             // Update the local data property with the received itemCount
             this.itemCount = itemCount;
         },
@@ -426,34 +411,51 @@ export default {
                 itemCount += parseInt(item.quantity);
             });
             this.itemCount = itemCount;
-            console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
+            // console.log('Emitting cartItemCountUpdated event with itemCount:', this.itemCount);
             this.$eventBus.$emit('cartItemCountUpdated', this.itemCount);
 
         },
         calculateSubtotal() {
-            let subtotal = 0;
-            this.cart.forEach((item) => {
-                const product = item.product;
-                console.log(`Quantity: ${item.quantity}, Price: ${product.price}`);
-                let priceWithoutCommas;
-                if (typeof product.price === 'string') {
-                    priceWithoutCommas = product.price.replace(/,/g, '');
-                } else {
-                    // If product.price is not a string, use it as is
-                    priceWithoutCommas = product.price;
-                }
-                const priceAsNumber = parseFloat(priceWithoutCommas);
-                if (!isNaN(item.quantity) && !isNaN(priceAsNumber)) {
-                    subtotal += item.quantity * priceAsNumber;
-                } else {
-                    console.error('Invalid quantity or price:', item.quantity, product.price);
-                }
-            });
-            this.subtotal = subtotal;
-            return subtotal;
+    let subtotal = 0;
+    this.cart.forEach((item) => {
+        const product = item.product;
+        const warrAmt = parseFloat(product.warrantyamt || 0); // Parse warranty amount to a number, defaulting to 0 if not provided
+
+        let priceWithoutCommas;
+        if (typeof product.last_price === 'string') {
+            priceWithoutCommas = parseFloat(product.last_price.replace(/,/g, ''));
+        } else {
+            priceWithoutCommas = parseFloat(product.last_price);
         }
+
+        if (!isNaN(item.quantity) && !isNaN(priceWithoutCommas)) {
+            // Calculate the total price for the item including warranty, if applicable
+            const totalPrice = priceWithoutCommas + warrAmt;
+
+            // Add the total price multiplied by quantity to the subtotal
+            subtotal += item.quantity * totalPrice;
+        } else {
+            console.error('Invalid quantity or price:', item.quantity, product.last_price);
+        }
+    });
+
+    // Assign subtotal to both subtotal and subtotal_
+    this.subtotal = subtotal;
+    return subtotal;
+},
 
 
     },
 }
 </script>
+<style>
+.freeBadge {
+    font-size: 10px !important;
+    /* background: #ff9901;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-weight: 600; */
+    color: #ff9901 !important;
+    /* width: fit-content; */
+}
+</style>

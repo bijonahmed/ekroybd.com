@@ -43,7 +43,7 @@
                             <div class="col-md-12">
                                 <ul class="nav nav-tabs nav-primary" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link " data-bs-toggle="tab" href="#primaryhome" role="tab"
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#primaryhome" role="tab"
                                             aria-selected="true">
                                             <div class="d-flex align-items-center">
                                                 <div class="tab-icon"><i class='bx bx-link font-18 me-1'></i>
@@ -85,7 +85,7 @@
                                         </a>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <a class="nav-link active" data-bs-toggle="tab" href="#SpeacilCat" role="tab"
+                                        <a class="nav-link" data-bs-toggle="tab" href="#SpeacilCat" role="tab"
                                             aria-selected="false">
                                             <div class="d-flex align-items-center">
                                                 <div class="tab-icon"><i class='bx bx-link font-18 me-1'></i>
@@ -97,7 +97,7 @@
 
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane fade " id="primaryhome" role="tabpanel">
+                                    <div class="tab-pane fade show active" id="primaryhome" role="tabpanel">
                                         <ul>
                                             <li v-for="category in categories" :key="category.id">
                                                 <span class="badge bg-dark">{{ category.name }} <span
@@ -153,11 +153,13 @@
                                                             <tbody>
                                                                 <tr v-for="productCats in productCat"
                                                                     :key="productCats.id">
-                                                                    <td>{{ productCats.name }}</td>
-                                                                    <td>{{ productCats.status === 1 ? 'Active' :
-                                'Inactive' }}</td>
+                                                                    <td>{{ productCats.name }}</td> 
+                                                                    <td> 
+                                                                        <span v-if="productCats.status==1" class="badge bg-success-light">Active</span> 
+                                                                        <span v-else class="btn bg-danger-light" >Inactive</span>
+                                                                    </td>
                                                                     <td><button
-                                                                            @click="removeProSliderCat(productCats.id)">DEL</button>
+                                                                            @click="removeProSliderCat(productCats.id)" class="btn bg-danger-light btn">DEL</button>
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
@@ -203,7 +205,7 @@
                                         </div>
 
                                     </div>
-                                    <div class="tab-pane fade show active" id="SpeacilCat" role="tabpanel">
+                                    <div class="tab-pane fade  " id="SpeacilCat" role="tabpanel">
                                         <div class="card">
                                             <div class="card-body">
                                                 <center>This is Speacial Category For Home Page </center>
@@ -224,7 +226,7 @@
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr v-for="productCats in speacialCat"
+                                                                <tr  v-for="productCats in speacialCat"
                                                                     :key="productCats.id">
                                                                     <td>{{ productCats.name }}</td>
                                                                     <td>
@@ -233,13 +235,13 @@
                                                                     </td>
                                                                     <td>
                                                                         <span v-if="productCats.speacial_status === 1"
-                                                                            class='badge bg-success'>Active</span>
+                                                                            class='badge bg-success-light'>Speacial</span>
                                                                         <span v-else
-                                                                            class='badge bg-danger'>Inactive</span>
+                                                                            class='badge bg-danger'>Normal</span>
                                                                     </td>
-                                                                    <!-- <td><button
-                                                                            @click="editSPCat(productCats.id)">Edit</button>
-                                                                    </td> -->
+                                                                    <td><button
+                                                                            @click="editSPCat(productCats)"  class="btn btn-warning bg-history-light">Edit</button>
+                                                                    </td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -359,7 +361,7 @@ export default {
             },
             speacilCatInsert: {
                 speacialCat_id: '',
-                speacial_status: '',
+                speacial_status: '0',
                 file: '',
             },
 
@@ -389,8 +391,16 @@ export default {
 
     },
     methods: {
-
-
+        editSPCat(productCats){
+            this.speacilCatInsert.speacialCat_id = productCats.id;
+            this.speacilCatInsert.file = productCats.image;
+            this.speacilCatInsert.speacial_status = productCats.speacial_status;
+            // console.log(id);
+            // this.$axios.post('/category/speacialCatEdit', { id: id })
+            //     .then(response => {
+            //         console.log(response.data);
+            //     })
+        },
         onFileSelected() {
             this.file = this.$refs.file.files[0];
             this.images_ = URL.createObjectURL(this.file);

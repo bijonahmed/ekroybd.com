@@ -104,7 +104,7 @@
                                                                         </td>
                                                                         <td>
                                                                             <center @click="attribute(item.id)">
-                                                                                <button type="button"><i class="bx bx-edit"></i>EDIT</button>
+                                                                                <button type="button" class="btn btn-warning  bg-history-light"><i class="bx bx-edit"></i>EDIT</button>
                                                                             </center>
                                                                         </td>
                                                                     </tr>
@@ -165,7 +165,7 @@
                                                             <center>
                                                                 <!-- <nuxt-link :to="{name: 'customer-edit-id', params: {id: item.id}}" variant="warning" size="sm"><i class="bx bx-edit"></i>EDIT
                                             </nuxt-link> -->
-                                                                <span @click="editAttrival(item.id)"><i class="bx bx-edit"></i>Edit</span>
+                                                                <span @click="editAttrival(item.id)"  class="btn btn-warning  bg-history-light"><i class="bx bx-edit"></i>Edit</span>
                                                             </center>
                                                         </td>
                                                     </tr>

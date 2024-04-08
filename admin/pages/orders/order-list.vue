@@ -61,7 +61,7 @@
                                     <td class="text-center">{{ item.name }}</td>
                                     <td>
                                         <center>
-                                            <button type="button" @click="edit(item.orderId)"><i class="bx bx-edit"></i></button>
+                                            <button type="button" class="btn btn-warning bg-history-light" @click="edit(item.orderId)"><i class="bx bx-edit"></i></button>
                                         </center>
                                     </td>
                                 </tr>
@@ -136,7 +136,7 @@ export default {
                 const response = await this.$axios.get(`/order/allOrdersAdmin`);
                 console.log("order" + response.data.orderdata);
 
-                this.data = response.data.orderdata;
+                this.data = response.data.orderdata.reverse();
                 $(".customerSpinner").hide();
             } catch (error) {
                 console.error(error);
