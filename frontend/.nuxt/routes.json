@@ -1,0 +1,569 @@
+[
+  {
+    "name": "allbrands",
+    "path": "/allbrands",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\allbrands.vue",
+    "chunkName": "pages/allbrands",
+    "_name": "_3f836062"
+  },
+  {
+    "name": "allshop",
+    "path": "/allshop",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\allshop.vue",
+    "chunkName": "pages/allshop",
+    "_name": "_3c2e828e"
+  },
+  {
+    "name": "blog",
+    "path": "/blog",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\blog.vue",
+    "chunkName": "pages/blog",
+    "_name": "_24eda9f0"
+  },
+  {
+    "name": "blog-details",
+    "path": "/blog-details",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\blog-details.vue",
+    "chunkName": "pages/blog-details",
+    "_name": "_630e3636"
+  },
+  {
+    "name": "cart",
+    "path": "/cart",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\cart.vue",
+    "chunkName": "pages/cart",
+    "_name": "_4cc0066e"
+  },
+  {
+    "name": "changepassword",
+    "path": "/changepassword",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\changepassword.vue",
+    "chunkName": "pages/changepassword",
+    "_name": "_25053099"
+  },
+  {
+    "name": "changepassword copy",
+    "path": "/changepassword%20copy",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\changepassword copy.vue",
+    "chunkName": "pages/changepassword copy",
+    "_name": "_2e799a4c"
+  },
+  {
+    "name": "charity",
+    "path": "/charity",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\charity.vue",
+    "chunkName": "pages/charity",
+    "_name": "_9cb0908c"
+  },
+  {
+    "name": "checkout",
+    "path": "/checkout",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\checkout.vue",
+    "chunkName": "pages/checkout",
+    "_name": "_689c0a94"
+  },
+  {
+    "name": "coupons",
+    "path": "/coupons",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\coupons.vue",
+    "chunkName": "pages/coupons",
+    "_name": "_5813e4af"
+  },
+  {
+    "name": "customer-review",
+    "path": "/customer-review",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\customer-review.vue",
+    "chunkName": "pages/customer-review",
+    "_name": "_76615cc9"
+  },
+  {
+    "name": "flas-sale",
+    "path": "/flas-sale",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\flas-sale.vue",
+    "chunkName": "pages/flas-sale",
+    "_name": "_106dfb1e"
+  },
+  {
+    "name": "forget-password",
+    "path": "/forget-password",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\forget-password.vue",
+    "chunkName": "pages/forget-password",
+    "_name": "_138b45c6"
+  },
+  {
+    "name": "login",
+    "path": "/login",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\login.vue",
+    "chunkName": "pages/login",
+    "_name": "_4a9718ea"
+  },
+  {
+    "name": "login-old1.0",
+    "path": "/login-old1.0",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\login-old1.0.vue",
+    "chunkName": "pages/login-old1.0",
+    "_name": "_dd59eb44"
+  },
+  {
+    "name": "official-store",
+    "path": "/official-store",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\official-store.vue",
+    "chunkName": "pages/official-store",
+    "_name": "_fb243866"
+  },
+  {
+    "name": "official-store-grid",
+    "path": "/official-store-grid",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\official-store-grid.vue",
+    "chunkName": "pages/official-store-grid",
+    "_name": "_76dbf5f6"
+  },
+  {
+    "name": "OfficialStoreFilter",
+    "path": "/OfficialStoreFilter",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\OfficialStoreFilter.vue",
+    "chunkName": "pages/OfficialStoreFilter",
+    "_name": "_436ab060"
+  },
+  {
+    "name": "OfficialStoreFilterGrid",
+    "path": "/OfficialStoreFilterGrid",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\OfficialStoreFilterGrid.vue",
+    "chunkName": "pages/OfficialStoreFilterGrid",
+    "_name": "_23052836"
+  },
+  {
+    "name": "order-confirm",
+    "path": "/order-confirm",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\order-confirm.vue",
+    "chunkName": "pages/order-confirm",
+    "_name": "_28395163"
+  },
+  {
+    "name": "payment",
+    "path": "/payment",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\payment.vue",
+    "chunkName": "pages/payment",
+    "_name": "_d7aa75b0"
+  },
+  {
+    "name": "product-grid",
+    "path": "/product-grid",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\product-grid.vue",
+    "chunkName": "pages/product-grid",
+    "_name": "_7fe050b2"
+  },
+  {
+    "name": "product-list",
+    "path": "/product-list",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\product-list.vue",
+    "chunkName": "pages/product-list",
+    "_name": "_85bfebec"
+  },
+  {
+    "name": "refund",
+    "path": "/refund",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\refund.vue",
+    "chunkName": "pages/refund",
+    "_name": "_feafad74"
+  },
+  {
+    "name": "required",
+    "path": "/required",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\required.vue",
+    "chunkName": "pages/required",
+    "_name": "_9f4dd726"
+  },
+  {
+    "name": "return-and-replacement",
+    "path": "/return-and-replacement",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\return-and-replacement.vue",
+    "chunkName": "pages/return-and-replacement",
+    "_name": "_0cc62266"
+  },
+  {
+    "name": "sell-on-ecommerce",
+    "path": "/sell-on-ecommerce",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\sell-on-ecommerce.vue",
+    "chunkName": "pages/sell-on-ecommerce",
+    "_name": "_78e3ece2"
+  },
+  {
+    "name": "sell-on-filter",
+    "path": "/sell-on-filter",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\sell-on-filter.vue",
+    "chunkName": "pages/sell-on-filter",
+    "_name": "_ca88568e"
+  },
+  {
+    "name": "seller-form",
+    "path": "/seller-form",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller-form.vue",
+    "chunkName": "pages/seller-form",
+    "_name": "_a2a32318"
+  },
+  {
+    "name": "sellerLogin",
+    "path": "/sellerLogin",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\sellerLogin.vue",
+    "chunkName": "pages/sellerLogin",
+    "_name": "_d939d968"
+  },
+  {
+    "name": "service",
+    "path": "/service",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\service.vue",
+    "chunkName": "pages/service",
+    "_name": "_7d0a6a57"
+  },
+  {
+    "name": "signup",
+    "path": "/signup",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\signup.vue",
+    "chunkName": "pages/signup",
+    "_name": "_6f982a34"
+  },
+  {
+    "name": "today-deal",
+    "path": "/today-deal",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\today-deal.vue",
+    "chunkName": "pages/today-deal",
+    "_name": "_7ee09e46"
+  },
+  {
+    "name": "update-password",
+    "path": "/update-password",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\update-password.vue",
+    "chunkName": "pages/update-password",
+    "_name": "_1cef0bc1"
+  },
+  {
+    "name": "affiliate-affiliate-dashboard",
+    "path": "/affiliate/affiliate-dashboard",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-dashboard.vue",
+    "chunkName": "pages/affiliate/affiliate-dashboard",
+    "_name": "_63e6cfb5"
+  },
+  {
+    "name": "affiliate-affiliate-programe",
+    "path": "/affiliate/affiliate-programe",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-programe.vue",
+    "chunkName": "pages/affiliate/affiliate-programe",
+    "_name": "_0e9a7ad0"
+  },
+  {
+    "name": "affiliate-affiliate-programe-register",
+    "path": "/affiliate/affiliate-programe-register",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-programe-register.vue",
+    "chunkName": "pages/affiliate/affiliate-programe-register",
+    "_name": "_270a19a0"
+  },
+  {
+    "name": "affiliate-affiliate-transfer",
+    "path": "/affiliate/affiliate-transfer",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\affiliate\\\\affiliate-transfer.vue",
+    "chunkName": "pages/affiliate/affiliate-transfer",
+    "_name": "_42acab5a"
+  },
+  {
+    "name": "brand-product-brand-grid",
+    "path": "/brand-product/brand-grid",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\brand-product\\\\brand-grid.vue",
+    "chunkName": "pages/brand-product/brand-grid",
+    "_name": "_7c40ad97"
+  },
+  {
+    "name": "category-all-categorys",
+    "path": "/category/all-categorys",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\category\\\\all-categorys.vue",
+    "chunkName": "pages/category/all-categorys",
+    "_name": "_559fca6d"
+  },
+  {
+    "name": "category-category-grid",
+    "path": "/category/category-grid",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\category\\\\category-grid.vue",
+    "chunkName": "pages/category/category-grid",
+    "_name": "_c7ccedce"
+  },
+  {
+    "name": "category-category-list",
+    "path": "/category/category-list",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\category\\\\category-list.vue",
+    "chunkName": "pages/category/category-list",
+    "_name": "_4d4d7b1e"
+  },
+  {
+    "name": "seller-change-password",
+    "path": "/seller/change-password",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\change-password.vue",
+    "chunkName": "pages/seller/change-password",
+    "_name": "_c871beca"
+  },
+  {
+    "name": "seller-order-details",
+    "path": "/seller/order-details",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\order-details.vue",
+    "chunkName": "pages/seller/order-details",
+    "_name": "_7ea39ef4"
+  },
+  {
+    "name": "seller-seller-account-setting",
+    "path": "/seller/seller-account-setting",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-account-setting.vue",
+    "chunkName": "pages/seller/seller-account-setting",
+    "_name": "_7a536ca2"
+  },
+  {
+    "name": "seller-seller-comission-history",
+    "path": "/seller/seller-comission-history",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-comission-history.vue",
+    "chunkName": "pages/seller/seller-comission-history",
+    "_name": "_71a2a526"
+  },
+  {
+    "name": "seller-seller-customer-returns",
+    "path": "/seller/seller-customer-returns",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-customer-returns.vue",
+    "chunkName": "pages/seller/seller-customer-returns",
+    "_name": "_0a2d1365"
+  },
+  {
+    "name": "seller-seller-dashboard",
+    "path": "/seller/seller-dashboard",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-dashboard.vue",
+    "chunkName": "pages/seller/seller-dashboard",
+    "_name": "_4cb5bcd3"
+  },
+  {
+    "name": "seller-seller-leftsidebar",
+    "path": "/seller/seller-leftsidebar",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-leftsidebar.vue",
+    "chunkName": "pages/seller/seller-leftsidebar",
+    "_name": "_18f05174"
+  },
+  {
+    "name": "seller-seller-message",
+    "path": "/seller/seller-message",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-message.vue",
+    "chunkName": "pages/seller/seller-message",
+    "_name": "_752c1e86"
+  },
+  {
+    "name": "seller-seller-orders",
+    "path": "/seller/seller-orders",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-orders.vue",
+    "chunkName": "pages/seller/seller-orders",
+    "_name": "_548e4ab6"
+  },
+  {
+    "name": "seller-seller-payment-history",
+    "path": "/seller/seller-payment-history",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-payment-history.vue",
+    "chunkName": "pages/seller/seller-payment-history",
+    "_name": "_1e9def68"
+  },
+  {
+    "name": "seller-seller-products",
+    "path": "/seller/seller-products",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-products.vue",
+    "chunkName": "pages/seller/seller-products",
+    "_name": "_85b75116"
+  },
+  {
+    "name": "seller-seller-products-post",
+    "path": "/seller/seller-products-post",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-products-post.vue",
+    "chunkName": "pages/seller/seller-products-post",
+    "_name": "_17e548b0"
+  },
+  {
+    "name": "seller-seller-profile",
+    "path": "/seller/seller-profile",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-profile.vue",
+    "chunkName": "pages/seller/seller-profile",
+    "_name": "_9863f1b0"
+  },
+  {
+    "name": "seller-seller-wallet",
+    "path": "/seller/seller-wallet",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-wallet.vue",
+    "chunkName": "pages/seller/seller-wallet",
+    "_name": "_8cfadc6c"
+  },
+  {
+    "name": "seller-seller-wishlist",
+    "path": "/seller/seller-wishlist",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\seller-wishlist.vue",
+    "chunkName": "pages/seller/seller-wishlist",
+    "_name": "_6e012356"
+  },
+  {
+    "name": "user-account-statement",
+    "path": "/user/account-statement",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\account-statement.vue",
+    "chunkName": "pages/user/account-statement",
+    "_name": "_8b064e74"
+  },
+  {
+    "name": "user-my-reviews",
+    "path": "/user/my-reviews",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\my-reviews.vue",
+    "chunkName": "pages/user/my-reviews",
+    "_name": "_f55bf0da"
+  },
+  {
+    "name": "user-mySalary",
+    "path": "/user/mySalary",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\mySalary.vue",
+    "chunkName": "pages/user/mySalary",
+    "_name": "_59310122"
+  },
+  {
+    "name": "user-old_user-withdrawal copy",
+    "path": "/user/old_user-withdrawal%20copy",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\old_user-withdrawal copy.vue",
+    "chunkName": "pages/user/old_user-withdrawal copy",
+    "_name": "_2731b022"
+  },
+  {
+    "name": "user-order-details",
+    "path": "/user/order-details",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\order-details.vue",
+    "chunkName": "pages/user/order-details",
+    "_name": "_08c7b33a"
+  },
+  {
+    "name": "user-track-order",
+    "path": "/user/track-order",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\track-order.vue",
+    "chunkName": "pages/user/track-order",
+    "_name": "_01a9e7fa"
+  },
+  {
+    "name": "user-user-bloglist",
+    "path": "/user/user-bloglist",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-bloglist.vue",
+    "chunkName": "pages/user/user-bloglist",
+    "_name": "_1c2137f9"
+  },
+  {
+    "name": "user-user-blogPost",
+    "path": "/user/user-blogPost",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-blogPost.vue",
+    "chunkName": "pages/user/user-blogPost",
+    "_name": "_063499ca"
+  },
+  {
+    "name": "user-user-dashborad",
+    "path": "/user/user-dashborad",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-dashborad.vue",
+    "chunkName": "pages/user/user-dashborad",
+    "_name": "_eb32c426"
+  },
+  {
+    "name": "user-user-mlm",
+    "path": "/user/user-mlm",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-mlm.vue",
+    "chunkName": "pages/user/user-mlm",
+    "_name": "_78c85b85"
+  },
+  {
+    "name": "user-user-orders",
+    "path": "/user/user-orders",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-orders.vue",
+    "chunkName": "pages/user/user-orders",
+    "_name": "_a4f5d544"
+  },
+  {
+    "name": "user-user-profile",
+    "path": "/user/user-profile",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-profile.vue",
+    "chunkName": "pages/user/user-profile",
+    "_name": "_79b09180"
+  },
+  {
+    "name": "user-user-requireProduct",
+    "path": "/user/user-requireProduct",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-requireProduct.vue",
+    "chunkName": "pages/user/user-requireProduct",
+    "_name": "_8b74827a"
+  },
+  {
+    "name": "user-user-security",
+    "path": "/user/user-security",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-security.vue",
+    "chunkName": "pages/user/user-security",
+    "_name": "_b389200e"
+  },
+  {
+    "name": "user-user-whichlist",
+    "path": "/user/user-whichlist",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-whichlist.vue",
+    "chunkName": "pages/user/user-whichlist",
+    "_name": "_63151f52"
+  },
+  {
+    "name": "user-user-withdrawal",
+    "path": "/user/user-withdrawal",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\user-withdrawal.vue",
+    "chunkName": "pages/user/user-withdrawal",
+    "_name": "_4b0caeae"
+  },
+  {
+    "name": "seller-products-product-edit",
+    "path": "/seller/products/product-edit",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-edit.vue",
+    "chunkName": "pages/seller/products/product-edit",
+    "_name": "_d6005b4e"
+  },
+  {
+    "name": "seller-products-product-preview",
+    "path": "/seller/products/product-preview",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-preview.vue",
+    "chunkName": "pages/seller/products/product-preview",
+    "_name": "_ea4bc76e"
+  },
+  {
+    "name": "seller-products-product-varient",
+    "path": "/seller/products/product-varient",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\seller\\\\products\\\\product-varient.vue",
+    "chunkName": "pages/seller/products/product-varient",
+    "_name": "_4bf88f8a"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_110cd074"
+  },
+  {
+    "name": "user-invite-user-id",
+    "path": "/user/invite-user/:id?",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\user\\\\invite-user\\\\_id.vue",
+    "chunkName": "pages/user/invite-user/_id",
+    "_name": "_4e4364e4"
+  },
+  {
+    "name": "business-slug",
+    "path": "/business/:slug?",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\business\\\\_slug.vue",
+    "chunkName": "pages/business/_slug",
+    "_name": "_0112776c"
+  },
+  {
+    "name": "product-details-slug",
+    "path": "/product-details/:slug?",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\product-details\\\\_slug.vue",
+    "chunkName": "pages/product-details/_slug",
+    "_name": "_6e29c2f4"
+  },
+  {
+    "name": "resetpassword-slug",
+    "path": "/resetpassword/:slug?",
+    "component": "D:\\\\nuxt\\\\ekroybd.com\\\\frontend\\\\pages\\\\resetpassword\\\\_slug.vue",
+    "chunkName": "pages/resetpassword/_slug",
+    "_name": "_149db32e"
+  }
+]
