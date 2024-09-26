@@ -48,7 +48,7 @@ export default {
       },
       { src: "https://cdn.jsdelivr.net/npm/sweetalert2@11" },
       { src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" },
-      { src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" },
+      { src: "https://cdn.jsdelivr.net/npm/vue-chat-scroll/dist/vue-chat-scroll.min.js" },
       { src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js" },
       {
         src: "https://cdn.jsdelivr.net/npm/swiper@11/swiper-element-bundle.min.js",

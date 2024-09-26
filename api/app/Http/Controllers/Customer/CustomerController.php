@@ -199,7 +199,73 @@ class CustomerController extends Controller
 
 
     ///getCustomerCalculateLevAd
+    public function getCustomerAllLevel(){
+        
+        $userId = $this->userid;
+        
+        // start 
+        function getLevelss($users, $level)
+        {
 
+            if (empty($users)) {
+                return [];
+            }
+            $userIdsArray = $users->pluck('id')->toArray();
+            return User::whereIn('join_id', $userIdsArray)->select('id', 'name', 'join_id')->get();
+        }
+
+        // dd($request->params);
+        $userid = $this->userid;
+        $userL1   = User::where('join_id', $userid)
+            ->select('id', 'name', 'join_id', 'email', 'created_at', 'status')
+            ->get();
+
+        $userL2 = getLevelss($userL1, 2);
+        $userL3 = getLevelss($userL2, 3);
+        $userL4 = getLevelss($userL3, 4);
+        $userL5 = getLevelss($userL4, 2);
+
+        $levels = [];
+        $levelNumbers = '1,2,3,4,5'; // Define levels as a string
+        $levelArray = explode(',', $levelNumbers); // Split into an array
+        
+        foreach ($levelArray as $levelNumber) {
+            // Dynamically access userL variables (like $userL1, $userL2, etc.)
+            $userLevel = ${"userL$levelNumber"};
+        
+            foreach ($userLevel as $v) {
+                $uplineQr = User::where('id', $v->join_id)->select('created_at', 'name', 'email')->first();
+        
+                // Check if this combination of id and name is already processed
+                if (!isset($uniqueEntries[$v->id][$v->name])) {
+                    $levels[] = [
+                        'id'      => $v->id,
+                        'name'    => !empty($v->name) ? $v->name : "",
+                        'profit'  => 0,
+                        'regDate' => date("Y-m-d", strtotime($uplineQr->created_at)),
+                        'upline'  => !empty($uplineQr->name) ? $uplineQr->name : "",
+                        'status'  => $v->status,
+                    ];
+        
+                    // Mark this id and name as processed
+                    $uniqueEntries[$v->id][$v->name] = true;
+                }
+            }
+        }
+
+        $data = [
+            'level'      => $levels,
+            'teamCount'  => count($levels),
+            'teamProfit' => 0,
+        ];
+
+        return response()->json($data, 200);
+
+        // END
+         
+    }
+
+    
     public function getCustomerCalculateLevAd(Request $request)
     {
 

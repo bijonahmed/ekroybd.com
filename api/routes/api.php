@@ -21,6 +21,7 @@ use App\Http\Controllers\Brands\BrandsController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Cart\CartController;
 use App\Http\Controllers\Order\OrderController;
+use App\Http\Controllers\Chat\ChatController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,6 +32,17 @@ use App\Http\Controllers\Order\OrderController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+
+
+Route::post('messages', [ChatController::class, 'message']);
+Route::post('customerSendMessages', [ChatController::class, 'customerSendMessages']); 
+Route::post('sellerSendMessages', [ChatController::class, 'sellerSendMessages']); 
+Route::get('/messages/{community_slug}', [ChatController::class, 'getMessages']);
+Route::get('/getSellerMessages/{seller_id}', [ChatController::class, 'getSellerMessages']);
+Route::get('/getBuyListForSeller', [ChatController::class, 'getBuyerList']);
+Route::get('/getSellerList', [ChatController::class, 'getSellerList']);
+
+
 
 Route::group([
     'middleware' => 'api',
@@ -61,6 +73,7 @@ Route::group([
     Route::get('getmlmReport', [CustomerController::class, 'getmlmReport']);
     Route::get('cateCommissionHistReport', [CustomerController::class, 'cateCommissionHistReport']);
     Route::get('getCustomerLevel', [CustomerController::class, 'getCustomerLevel']);
+    Route::post('getCustomerAllLevel', [CustomerController::class, 'getCustomerAllLevel']);
     Route::post('getCustomerCalculateLev', [CustomerController::class, 'getCustomerCalculateLev']);
     Route::post('getCustomerCalculateLevAd', [CustomerController::class, 'getCustomerCalculateLevAd']);
     Route::post('saveLead', [CustomerController::class, 'saveLead']);
@@ -116,7 +129,7 @@ Route::group([
     Route::get('blogs', [UserController::class,'getblogs']);
 });
 Route::group([
-    'middleware' => 'api',
+   // 'middleware' => 'api',
     'prefix' => 'category'
 ], function () {
     Route::post('save', [CategoryController::class, 'save']);
@@ -134,7 +147,7 @@ Route::group([
     Route::get('getSubCategoryChild/{id}', [CategoryController::class, 'getSubCategoryChild']);
     Route::get('attributeRow/{id}', [CategoryController::class, 'attributeRow']);
     Route::get('attributeValRow/{id}', [CategoryController::class, 'attributeValRow']);
-    Route::get('attributeValRows/{attributes_id}', [CategoryController::class, 'attributeValRows']);
+    Route::get('attributeValRows/{attributes_id}', [ProductController::class, 'attributeValRows']);
     Route::get('search', [CategoryController::class, 'searchCategory']);
     Route::get('attributes', [CategoryController::class, 'getAttribute']);
     Route::get('attributes-list', [CategoryController::class, 'getAttributeList']);
@@ -282,6 +295,7 @@ Route::group([
     Route::get('blogdetails', [UnauthenticatedController::class, 'blogdetails']);
     
     Route::get('getsalaryuser', [UnauthenticatedController::class, 'getsalaryuser']);
+    Route::get('getsPackUser', [UnauthenticatedController::class, 'getsPackUser']);
 });
 
 
@@ -298,6 +312,14 @@ Route::group([
     Route::post('insertPayGroup', [SettingController::class, 'insertPayGroup']);
     Route::get('getPayGroupList', [SettingController::class, 'getPayGroupList']);
     Route::get('checkrowPayGroup/{id}', [SettingController::class, 'checkrowPayGroup']);
+   //salary
+   Route::post('insertSalary', [SettingController::class, 'insertSalary']);
+   Route::post('insertPack', [SettingController::class, 'insertPack']);
+   Route::get('checkrowsallary/{id}', [SettingController::class, 'checkrowsallary']);
+   Route::get('checkrowPack/{id}', [SettingController::class, 'checkrowPack']);
+   Route::get('getsalary', [SettingController::class, 'getsalary']);
+   Route::get('getPack', [SettingController::class, 'getPack']);
+
     //Annual Pay 
     Route::post('insertAnnualPay', [SettingController::class, 'insertAnnualPay']);
     Route::get('getAnnualPayist', [SettingController::class, 'getAnnualPayist']);

@@ -37,7 +37,7 @@ You can directly use them in pages and other components without the need to impo
 - `<LogoAndPayment>` | `<logo-and-payment>` (components/LogoAndPayment.vue)
 - `<MoreCollection>` | `<more-collection>` (components/MoreCollection.vue)
 - `<Navbar>` | `<navbar>` (components/Navbar.vue)
-- `<NavbarSecond>` | `<navbar-second>` (components/NavbarSecond.vue)
+- `<NavbarSecond>` | `<navbar-second>` (components/navbarSecond.vue)
 - `<NavSlider>` | `<nav-slider>` (components/NavSlider.vue)
 - `<OfficalStore>` | `<offical-store>` (components/OfficalStore.vue)
 - `<OfficialStoreDeals>` | `<official-store-deals>` (components/OfficialStoreDeals.vue)

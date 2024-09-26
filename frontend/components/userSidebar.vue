@@ -5,6 +5,9 @@
                 <li :class="{ active: $route.path === '/user/user-dashborad' }">
                     <Nuxt-link to="/user/user-dashborad"  exact-active-class="active">Dashboard</Nuxt-link>
                 </li>
+                <li @click="setChatBox()">
+                    <Nuxt-link to="#"><a href="#">ChatBox</a></Nuxt-link>
+                </li>
                 <li :class="{ active: $route.path === '/user/user-profile' }">
                     <Nuxt-link to="/user/user-profile" exact-active-class="active">My account </Nuxt-link>
                 </li>
@@ -14,8 +17,8 @@
                 <li :class="{ active: $route.path === '/user/user-whichlist' }">
                     <Nuxt-link to="/user/user-whichlist" exact-active-class="active">Wishlist </Nuxt-link>
                 </li>
-                <li  :class="{ active: $route.path === '/user/user-mlm' }">
-                    <Nuxt-link to="/user/user-mlm" exact-active-class="active">MLM </Nuxt-link>
+                <li  :class="{ active: $route.path === '/user/user-affiliate' }">
+                    <Nuxt-link to="/user/user-affiliate" exact-active-class="active">Affiliate Program </Nuxt-link>
                 </li>
                 <!-- <li>
                     <a type="button" class="post_mdal_open">Post </a>
@@ -27,12 +30,16 @@
                 <li :class="{ active: $route.path === '/user/mySalary' }">
                     <nuxt-link to="/user/mySalary" exact-active-class="active">My Salary</Nuxt-link>
                 </li>
+                <li :class="{ active: $route.path === '/user/myPackages' }">
+                    <nuxt-link to="/user/myPackages" exact-active-class="active">My Packages</Nuxt-link>
+                </li>
+               
                 <li :class="{ active: $route.path === '/user/user-withdrawal' }">
                     <nuxt-link to="/user/user-withdrawal" exact-active-class="active">Withdrawal</Nuxt-link>
                 </li>
-                <li :class="{ active: $route.path === '/user/account-statement' }">
+                <!-- <li :class="{ active: $route.path === '/user/account-statement' }">
                     <nuxt-link to="/user/account-statement" exact-active-class="active">Account Statement</Nuxt-link>
-                </li>
+                </li> -->
                 <li :class="{ active: $route.path === '/user/user-security' }">
                     <nuxt-link to="/user/user-security" exact-active-class="active">Security </Nuxt-link>
                 </li>
@@ -80,10 +87,23 @@ export default {
     mounted() {
     },
     methods: {
-        // logout() {
-        //     localStorage.removeItem('jwtToken');
-        //     this.$router.push('/');
-        // },
+        async setChatBox() {
+      await this.$axios.post(`/auth/me`).then((response) => {
+        // Seller Account Info
+        let userId = response.data.id;
+        let name = response.data.name;
+        let email = response.data.email;
+        return this.$router.push({
+          path: '/chatbox/messages',
+          query: {
+            slug: name,
+            username: email,
+            seller_id: userId,
+            name: email
+          }
+        });
+      });
+    },
         async logout() {
             localStorage.removeItem('jwtToken');
             await this.$auth.logout()

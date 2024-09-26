@@ -27,6 +27,7 @@
     "swiper": "^11.0.3",
     "vue": "^2.7.15",
     "vue-axios": "^3.5.2",
+    "vue-chat-scroll": "^1.4.0",
     "vue-confirm-dialog": "^1.1.0",
     "vue-owl-carousel": "^2.0.3",
     "vue-server-renderer": "^2.7.15",
